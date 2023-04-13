@@ -1,5 +1,7 @@
 import type {MetaFunction} from '@shopify/remix-oxygen'
 
+import {root} from './index.css'
+
 export const meta: MetaFunction = () => {
   return {
     title: 'Hydrogen',
@@ -9,7 +11,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div>
+    <div className={root}>
       <h3>Hello from the home page!</h3>
     </div>
   )
