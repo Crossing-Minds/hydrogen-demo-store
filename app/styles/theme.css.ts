@@ -2,6 +2,7 @@ import {createTheme} from '@vanilla-extract/css'
 
 export const [themeClass, vars] = createTheme({
   colors: {
+    black: '#000000',
     brandBlack: '#080E12',
     lightBlue01: '#F5F6FF',
     lightGrey04: '#D3D5E0',
@@ -11,6 +12,7 @@ export const [themeClass, vars] = createTheme({
     white: '#FFFFFF'
   },
   fonts: {
-    nanum: 'Nanum Myeongjo'
+    nanum: 'Nanum Myeongjo',
+    openSans: 'Open Sans'
   }
 })

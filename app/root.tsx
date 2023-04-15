@@ -11,12 +11,16 @@ import type {Shop} from '@shopify/hydrogen/storefront-api-types'
 import {
   type LinksFunction,
   type LoaderArgs,
-  type MetaFunction
+  type MetaFunction,
+  defer
 } from '@shopify/remix-oxygen'
+import swiperStyle from 'swiper/swiper.min.css'
 
+import {getCart} from './api/cart'
 import {Layout} from './components/Layout'
 import {themeClass} from './styles/theme.css'
 import favicon from '../public/favicon.svg'
+import './styles/reset.css'
 import './styles/global.css'
 
 export const links: LinksFunction = () => {
@@ -35,11 +39,19 @@ export const links: LinksFunction = () => {
       type: 'image/svg+xml'
     },
     {
+      href: swiperStyle,
+      rel: 'stylesheet'
+    },
+    {
       href: cssBundleHref as string,
       rel: 'stylesheet'
     },
     {
       href: 'https://fonts.googleapis.com/css?family=Nanum Myeongjo',
+      rel: 'stylesheet'
+    },
+    {
+      href: 'https://fonts.googleapis.com/css?family=Open Sans',
       rel: 'stylesheet'
     }
   ]
@@ -51,15 +63,19 @@ export const meta: MetaFunction = () => ({
 })
 
 export async function loader({context}: LoaderArgs) {
-  const layout = await context.storefront.query<{shop: Shop}>(LAYOUT_QUERY)
+  const cartId = await context.session.get('cartId')
 
-  return {layout}
+  return defer({
+    cart: cartId ? getCart(context, cartId) : undefined,
+    layout: await context.storefront.query<{shop: Shop}>(LAYOUT_QUERY)
+  })
 }
 
 export default function App() {
   const data = useLoaderData<typeof loader>()
 
   const {name} = data.layout.shop
+  console.log(name)
 
   return (
     <html lang="en">
@@ -68,7 +84,7 @@ export default function App() {
         <Links />
       </head>
       <body className={themeClass}>
-        <Layout title={name}>
+        <Layout>
           <Outlet />
         </Layout>
         <ScrollRestoration />

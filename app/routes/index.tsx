@@ -1,5 +1,11 @@
 import type {MetaFunction} from '@shopify/remix-oxygen'
 
+import {Collections} from '~/components/Collections'
+import {HeroBanner} from '~/components/HeroBanner'
+import {NewReleases} from '~/components/NewReleases'
+import {OurFavorites} from '~/components/OurFavorites'
+import {Recomendations} from '~/components/Recomendations'
+
 import {root} from './index.css'
 
 export const meta: MetaFunction = () => {
@@ -12,7 +18,11 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div className={root}>
-      <h3>Hello from the home page!</h3>
+      <HeroBanner />
+      <Collections />
+      <Recomendations />
+      <NewReleases />
+      <OurFavorites />
     </div>
   )
 }
