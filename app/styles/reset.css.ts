@@ -32,6 +32,10 @@ globalStyle('a', {
   textDecoration: 'none'
 })
 
+globalStyle('ul', {
+  padding: 0
+})
+
 globalStyle('#root', {
   isolation: 'isolate'
 })
