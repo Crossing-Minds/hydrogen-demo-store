@@ -9,10 +9,18 @@ import {
 } from './Recomendations.css'
 import {RecomendationsItem} from './RecomendationsItem'
 
-export const Recomendations: FunctionComponent = () => {
+interface RecomendationsProps {
+  products: number[]
+  title: string
+}
+
+export const Recomendations: FunctionComponent<RecomendationsProps> = ({
+  products,
+  title
+}) => {
   return (
     <div className={recomendationsStyle}>
-      <h2 className={recomendationsTitleStyle}>Recomendations for you</h2>
+      <h2 className={recomendationsTitleStyle}>{title}</h2>
       <div className={recomendationsSwiperWrapperStyle}>
         <Swiper
           slidesPerView={'auto'}
@@ -20,7 +28,7 @@ export const Recomendations: FunctionComponent = () => {
           centeredSlides={false}
           className={recomendationsSwipperStyle}
         >
-          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => (
+          {products.map(n => (
             <SwiperSlide key={n}>
               <RecomendationsItem />
             </SwiperSlide>

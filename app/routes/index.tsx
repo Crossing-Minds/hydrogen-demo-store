@@ -6,8 +6,6 @@ import {NewReleases} from '~/components/NewReleases'
 import {OurFavorites} from '~/components/OurFavorites'
 import {Recomendations} from '~/components/Recomendations'
 
-import {root} from './index.css'
-
 export const meta: MetaFunction = () => {
   return {
     title: 'Hydrogen',
@@ -17,10 +15,13 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div className={root}>
+    <div>
       <HeroBanner />
       <Collections />
-      <Recomendations />
+      <Recomendations
+        products={[0, 1, 2, 3, 4, 5, 6, 7]}
+        title="Recommendations for you"
+      />
       <NewReleases />
       <OurFavorites />
     </div>

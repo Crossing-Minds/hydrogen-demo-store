@@ -3,7 +3,7 @@ import {style, styleVariants} from '@vanilla-extract/css'
 
 import {vars} from '~/styles/theme.css'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'hero'
+export type ButtonVariant = 'primary' | 'secondary' | 'hero' | 'outlined'
 
 const buttonStyleBase = style({
   border: 0,
@@ -38,6 +38,15 @@ export const buttonStyle = styleVariants<
       color: vars.colors.white,
       fontSize: 20,
       fontWeight: 600
+    }
+  ],
+  outlined: [
+    buttonStyleBase,
+    {
+      background: vars.colors.white,
+      border: '1px solid',
+      borderColor: vars.colors.black,
+      color: vars.colors.black
     }
   ]
 })

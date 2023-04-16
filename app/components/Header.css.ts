@@ -4,6 +4,7 @@ import {vars} from '~/styles/theme.css'
 
 export const headerStyle = style({
   background: vars.colors.white,
+  boxShadow: '0px 2px 18px rgba(1, 12, 122, 0.08)',
   height: 64,
   left: '50%',
   marginLeft: '-50vw',
