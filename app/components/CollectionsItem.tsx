@@ -1,3 +1,4 @@
+import type {Collection} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 
 import {
@@ -5,11 +6,22 @@ import {
   collectionsItemTitleStyle
 } from './CollectionsItem.css'
 
-export const CollectionsItem: FunctionComponent = () => {
+interface CollectionsItemProps {
+  collection: Collection
+}
+
+export const CollectionsItem: FunctionComponent<CollectionsItemProps> = ({
+  collection
+}) => {
   return (
     <>
-      <div className={collectionsItemImageStyle}></div>
-      <p className={collectionsItemTitleStyle}>Collection Name</p>
+      <div
+        className={collectionsItemImageStyle}
+        style={{
+          backgroundImage: `url(${collection.image?.url})`
+        }}
+      ></div>
+      <p className={collectionsItemTitleStyle}>{collection.title}</p>
     </>
   )
 }

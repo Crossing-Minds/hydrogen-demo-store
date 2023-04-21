@@ -1,3 +1,4 @@
+import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 import {Swiper, SwiperSlide} from 'swiper/react'
 
@@ -10,7 +11,7 @@ import {
 import {RecomendationsItem} from './RecomendationsItem'
 
 interface RecomendationsProps {
-  products: number[]
+  products: Product[]
   title: string
 }
 
@@ -28,9 +29,9 @@ export const Recomendations: FunctionComponent<RecomendationsProps> = ({
           centeredSlides={false}
           className={recomendationsSwipperStyle}
         >
-          {products.map(n => (
-            <SwiperSlide key={n}>
-              <RecomendationsItem />
+          {products.map(product => (
+            <SwiperSlide key={product.id}>
+              <RecomendationsItem product={product} />
             </SwiperSlide>
           ))}
         </Swiper>

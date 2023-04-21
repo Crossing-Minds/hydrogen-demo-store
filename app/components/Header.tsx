@@ -1,4 +1,4 @@
-import {useMatches} from '@remix-run/react'
+import {Link, useMatches} from '@remix-run/react'
 import type {FunctionComponent} from 'react'
 
 import {headerInnerStyle, headerStyle, headerTitleStyle} from './Header.css'
@@ -11,7 +11,9 @@ export const Header: FunctionComponent = () => {
   return (
     <header className={headerStyle}>
       <div className={headerInnerStyle}>
-        <h1 className={headerTitleStyle}>Carrera</h1>
+        <a href="/">
+          <h1 className={headerTitleStyle}>Carrera</h1>
+        </a>
         <HeaderCart cart={cart} />
       </div>
     </header>

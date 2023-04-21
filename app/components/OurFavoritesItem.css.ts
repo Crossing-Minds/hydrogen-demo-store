@@ -14,7 +14,6 @@ export const ourFavoritesItemStyle = style({
 })
 
 export const ourFavoritesItemImageStyle = style({
-  background: vars.colors.lightGrey04,
   borderRadius: 4,
   height: 256,
   width: '100%'
@@ -22,8 +21,12 @@ export const ourFavoritesItemImageStyle = style({
 
 export const ourFavoritesItemTitleStyle = style({
   color: vars.colors.black,
+  display: 'block',
   fontSize: 16,
   fontWeight: 500,
   marginBottom: 18,
-  marginTop: 16
+  marginTop: 16,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap'
 })

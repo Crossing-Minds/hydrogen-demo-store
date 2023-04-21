@@ -1,4 +1,4 @@
-import type {Image} from '@shopify/hydrogen/storefront-api-types'
+import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 
 import {Button} from './Button'
@@ -12,28 +12,21 @@ import {
   productDetailTitleStyle,
   productDetailWrapperStyle
 } from './ProductDetail.css'
+import {ProductImage} from './ProductImage'
 
 interface ButtonProps {
-  product: {
-    image: Image
-    title: string
-    price: string
-    description: string
-  }
+  product: Product
 }
 
 export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
   return (
     <div className={productDetailStyle}>
-      <div
-        className={productDetailImageStyle}
-        style={{
-          backgroundImage: `url(${product.image.url})`
-        }}
-      />
+      <ProductImage className={productDetailImageStyle} product={product} />
       <div className={productDetailWrapperStyle}>
         <h1 className={productDetailTitleStyle}>{product.title}</h1>
-        <p className={productDetailPriceStyle}>{product.price}</p>
+        <p className={productDetailPriceStyle}>
+          ${product.variants.nodes[0]?.price.amount}
+        </p>
         <p className={productDetailAttributeStyle}>Color: White</p>
         <p className={productDetailAttributeStyle}>Size: M</p>
         <div>
@@ -47,7 +40,10 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
           />
           <Button onClick={() => undefined} title="Buy it now" />
         </div>
-        <p className={productDetailDescriptionStyle}>{product.description}</p>
+        <div
+          className={productDetailDescriptionStyle}
+          dangerouslySetInnerHTML={{__html: product.descriptionHtml}}
+        />
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+import type {Collection} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 import {Swiper, SwiperSlide} from 'swiper/react'
 
@@ -9,7 +10,13 @@ import {
 } from './Collections.css'
 import {CollectionsItem} from './CollectionsItem'
 
-export const Collections: FunctionComponent = () => {
+interface CollectionsProps {
+  collections: Collection[]
+}
+
+export const Collections: FunctionComponent<CollectionsProps> = ({
+  collections
+}) => {
   return (
     <div className={collectionsStyle}>
       <h2 className={collectionsTitleStyle}>Collections for you</h2>
@@ -20,9 +27,9 @@ export const Collections: FunctionComponent = () => {
           centeredSlides={false}
           className={collectionsSwipperStyle}
         >
-          {[0, 1, 2, 3, 4, 5, 6, 7].map(n => (
-            <SwiperSlide key={n}>
-              <CollectionsItem />
+          {collections.map(collection => (
+            <SwiperSlide key={collection.id}>
+              <CollectionsItem collection={collection} />
             </SwiperSlide>
           ))}
         </Swiper>

@@ -34,6 +34,9 @@ dependencies:
   '@vanilla-extract/css':
     specifier: ^1.11.0
     version: 1.11.0
+  classnames:
+    specifier: ^2.3.2
+    version: 2.3.2
   graphql:
     specifier: ^16.6.0
     version: 16.6.0
@@ -3361,6 +3364,10 @@ packages:
 
   /ci-info@2.0.0:
     resolution: {integrity: sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==}
+    dev: false
+
+  /classnames@2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
     dev: false
 
   /clean-stack@2.2.0:

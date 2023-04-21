@@ -3,7 +3,8 @@ import {style} from '@vanilla-extract/css'
 import {vars} from '~/styles/theme.css'
 
 export const collectionsItemImageStyle = style({
-  background: vars.colors.lightGrey04,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
   height: 256
 })
 

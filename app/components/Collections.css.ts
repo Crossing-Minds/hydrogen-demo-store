@@ -16,12 +16,7 @@ export const collectionsTitleStyle = style({
 
 export const collectionsSwiperWrapperStyle = style({
   height: 298,
-  left: '50%',
-  marginLeft: '-50vw',
-  marginRight: '-50vw',
-  position: 'relative',
-  right: '50%',
-  width: '100vw'
+  width: '100%'
 })
 
 globalStyle(`${collectionsSwiperWrapperStyle} .swiper`, {
@@ -35,15 +30,6 @@ globalStyle(`${collectionsSwiperWrapperStyle} .swiper-slide`, {
   '@media': {
     '(min-width: 1024px)': {
       width: 444
-    }
-  }
-})
-
-globalStyle(`${collectionsSwiperWrapperStyle} .swiper-wrapper`, {
-  paddingLeft: 32,
-  '@media': {
-    '(min-width: 1024px)': {
-      paddingLeft: 'calc(calc(100vw - 896px)/2)'
     }
   }
 })
