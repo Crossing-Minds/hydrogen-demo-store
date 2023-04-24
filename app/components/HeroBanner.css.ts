@@ -4,7 +4,9 @@ import {vars} from '~/styles/theme.css'
 
 export const heroBannerStyle = style({
   alignItems: 'center',
-  background: vars.colors.lightGrey04,
+  backgroundColor: vars.colors.lightGrey04,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
   display: 'flex',
   height: 448,
   justifyContent: 'center',
@@ -21,6 +23,7 @@ export const heroBannerInnerStyle = style({
 })
 
 export const heroBannerTitle = style({
+  color: vars.colors.white,
   fontSize: 36,
   fontWeight: 600,
   lineHeight: '48px',
@@ -28,6 +31,7 @@ export const heroBannerTitle = style({
 })
 
 export const heroBannerDescription = style({
+  color: vars.colors.white,
   fontSize: 14,
   lineHeight: '20px',
   marginBottom: 16
