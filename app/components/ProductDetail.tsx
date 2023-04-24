@@ -1,6 +1,5 @@
+import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
-
-import type {ProductType} from '~/types/product'
 
 import {Button} from './Button'
 import {
@@ -16,7 +15,7 @@ import {
 import {ProductImage} from './ProductImage'
 
 interface ButtonProps {
-  product: ProductType
+  product: Product
 }
 
 export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {

@@ -65,3 +65,38 @@ query products($ids: [ID!]!) {
   }
 }
 `
+
+export const PRODUCTS_BY_VARIANT_QUERY = `#graphql
+query variantProducts($ids: [ID!]!) {
+  nodes(ids: $ids) {
+    ... on ProductVariant {
+      id
+      product {
+        id
+        descriptionHtml
+        handle
+        media(first: 1) {
+          nodes {
+            ... on MediaImage {
+              image {
+                height
+                url
+                width
+              }
+            }
+          }
+        }
+        variants(first: 1) {
+          nodes {
+            id
+            price {
+              amount
+            }
+          }
+        }
+        title
+      }
+    }
+  }
+}
+`

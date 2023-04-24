@@ -33,10 +33,6 @@ export const Layout: FunctionComponent<PropsWithChildren<object>> = ({
     }
   }, [addToCartFetchers, isOpen, openDrawer])
 
-  useEffect(() => {
-    openDrawer()
-  }, [])
-
   return (
     <div className={layoutStyle}>
       <div className={layoutContentWrapperStyle}>

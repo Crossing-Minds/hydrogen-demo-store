@@ -1,11 +1,16 @@
-import {getPersonalizedRecommendations} from '@crossingminds/beam-react'
+import {
+  getItemBasedRecommendations,
+  getPersonalizedRecommendations
+} from '@crossingminds/beam-react'
 import {useLoaderData} from '@remix-run/react'
+import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {LoaderArgs} from '@shopify/remix-oxygen'
 
-import {BEAM_REACT_OPTIONS, getRandomProductIds} from '~/beam/config'
+import {BEAM_REACT_OPTIONS} from '~/beam/config'
 import {ProductDetail} from '~/components/ProductDetail'
 import {Recomendations} from '~/components/Recomendations'
-import {PRODUCTS_QUERY, PRODUCT_QUERY} from '~/queries/product'
+import {PRODUCTS_BY_VARIANT_QUERY, PRODUCT_QUERY} from '~/queries/product'
+import {getIdFromShopifyEntityId} from '~/utils/shopify'
 
 export const loader = async ({context, params}: LoaderArgs) => {
   const {handle} = params
@@ -22,30 +27,49 @@ export const loader = async ({context, params}: LoaderArgs) => {
     throw new Response(undefined, {status: 404})
   }
 
-  const {itemIds} = await getPersonalizedRecommendations({
-    ...BEAM_REACT_OPTIONS,
-    sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
-    clientOptions: {
-      endpointBasePath: 'https://staging-api.crossingminds.com'
-    }
-  })
-  console.log('itemIds', itemIds)
+  const {itemIds: variantIdsForPurchasedOrViewed} =
+    await getPersonalizedRecommendations({
+      ...BEAM_REACT_OPTIONS,
+      sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
+      maxResults: 8,
+      clientOptions: {
+        endpointBasePath: 'https://staging-api.crossingminds.com'
+      }
+    })
 
-  const productIdsForPurchasedOrViewed = getRandomProductIds(8)
   const {nodes: productForPurchasedOrViewed} = await context.storefront.query<
     Promise<any>
-  >(PRODUCTS_QUERY, {
+  >(PRODUCTS_BY_VARIANT_QUERY, {
     variables: {
-      ids: productIdsForPurchasedOrViewed
+      ids: variantIdsForPurchasedOrViewed.map(
+        variantId => `gid://shopify/ProductVariant/${variantId}`
+      )
     }
   })
 
-  const productIdsForRecommendations = getRandomProductIds(8)
+  const {itemIds: variantIdsForRecommendations} =
+    await getItemBasedRecommendations({
+      ...BEAM_REACT_OPTIONS,
+      sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
+      itemId: getIdFromShopifyEntityId(
+        'ProductVariant',
+        (product as Product).variants.nodes[0]?.id
+      ),
+      options: {
+        maxResults: 9
+      },
+      clientOptions: {
+        endpointBasePath: 'https://staging-api.crossingminds.com'
+      }
+    })
+
   const {nodes: productForRecommendations} = await context.storefront.query<
     Promise<any>
-  >(PRODUCTS_QUERY, {
+  >(PRODUCTS_BY_VARIANT_QUERY, {
     variables: {
-      ids: productIdsForRecommendations
+      ids: variantIdsForRecommendations.map(
+        variantId => `gid://shopify/ProductVariant/${variantId}`
+      )
     }
   })
 

@@ -1,6 +1,5 @@
+import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
-
-import type {ProductType} from '~/types/product'
 
 import {
   ourFavoritesItemImageStyle,
@@ -10,7 +9,7 @@ import {
 import {ProductImage} from './ProductImage'
 
 interface OurFavoritesItemProps {
-  product: ProductType
+  product: Product
 }
 
 export const OurFavoritesItem: FunctionComponent<OurFavoritesItemProps> = ({
