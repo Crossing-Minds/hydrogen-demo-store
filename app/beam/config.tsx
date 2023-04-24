@@ -40,14 +40,14 @@ export const DEMO_PRODUCT_IDS = [
 ]
 
 export const DEMO_COLLECTION_IDS = [
-  'gid://shopify/Collection/445256892733',
-  'gid://shopify/Collection/445257023805',
-  'gid://shopify/Collection/445257122109',
-  'gid://shopify/Collection/445257154877',
-  'gid://shopify/Collection/445257220413',
-  'gid://shopify/Collection/445257285949',
-  'gid://shopify/Collection/445257318717',
-  'gid://shopify/Collection/445257384253'
+  'gid://shopify/Collection/442762232096',
+  'gid://shopify/Collection/442762264864',
+  'gid://shopify/Collection/442762297632',
+  'gid://shopify/Collection/442762330400',
+  'gid://shopify/Collection/442762363168',
+  'gid://shopify/Collection/442762428704',
+  'gid://shopify/Collection/442762494240',
+  'gid://shopify/Collection/442762527008'
 ]
 
 export const getRandomProductIds = (quantity: number) => {

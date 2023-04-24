@@ -13,6 +13,7 @@ module.exports = {
   rules: {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    'hydrogen/prefer-image-component': 'off',
     'sort-imports': [
       'error',
       {

@@ -1,10 +1,14 @@
-import {Link, useMatches} from '@remix-run/react'
+import {useMatches} from '@remix-run/react'
 import type {FunctionComponent} from 'react'
 
 import {headerInnerStyle, headerStyle, headerTitleStyle} from './Header.css'
 import {HeaderCart} from './HeaderCart'
 
-export const Header: FunctionComponent = () => {
+interface HeaderProps {
+  openDrawer: () => void
+}
+
+export const Header: FunctionComponent<HeaderProps> = ({openDrawer}) => {
   const [root] = useMatches()
   const cart: any = root?.data?.cart
 
@@ -14,7 +18,7 @@ export const Header: FunctionComponent = () => {
         <a href="/">
           <h1 className={headerTitleStyle}>Carrera</h1>
         </a>
-        <HeaderCart cart={cart} />
+        <HeaderCart cart={cart} openDrawer={openDrawer} />
       </div>
     </header>
   )
