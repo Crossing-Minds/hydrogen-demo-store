@@ -43,7 +43,7 @@ export const RecomendationsItem: FunctionComponent<RecomendationsItemProps> = ({
         />
         <input type="hidden" name="lines" value={JSON.stringify(lines)} />
 
-        <Button onClick={() => undefined} title="Add to cart" />
+        <Button title="Add to cart" />
       </fetcher.Form>
     </>
   )

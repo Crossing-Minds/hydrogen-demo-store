@@ -1,3 +1,4 @@
+import {useFetcher, useMatches} from '@remix-run/react'
 import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 
@@ -19,6 +20,11 @@ interface ButtonProps {
 }
 
 export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
+  const [root] = useMatches()
+  const selectedLocale = root?.data?.selectedLocale
+  const fetcher = useFetcher()
+  const lines = [{merchandiseId: product.variants.nodes[0]?.id, quantity: 1}]
+
   return (
     <div className={productDetailStyle}>
       <ProductImage className={productDetailImageStyle} product={product} />
@@ -33,12 +39,26 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
           <p className={productDetailAttributeStyle}>Quantity</p>
         </div>
         <div className={productDetailCTAsStyle}>
-          <Button
-            onClick={() => undefined}
-            title="Add to cart"
-            variant="outlined"
-          />
-          <Button onClick={() => undefined} title="Buy it now" />
+          <fetcher.Form action="/cart" method="post">
+            <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
+            <input
+              type="hidden"
+              name="countryCode"
+              value={selectedLocale?.country ?? 'US'}
+            />
+            <input type="hidden" name="lines" value={JSON.stringify(lines)} />
+            <Button title="Add to cart" variant="outlined" />
+          </fetcher.Form>
+          <fetcher.Form action="/cart" method="post">
+            <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
+            <input
+              type="hidden"
+              name="countryCode"
+              value={selectedLocale?.country ?? 'US'}
+            />
+            <input type="hidden" name="lines" value={JSON.stringify(lines)} />
+            <Button title="Buy it now" />
+          </fetcher.Form>
         </div>
         <div
           className={productDetailDescriptionStyle}

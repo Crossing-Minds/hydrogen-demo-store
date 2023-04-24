@@ -10,9 +10,13 @@ export const recomendationsItemImageStyle = style({
 
 export const recomendationsItemTitleStyle = style({
   color: vars.colors.black,
+  display: 'block',
   fontSize: 16,
   fontWeight: 500,
-  marginTop: 8
+  marginTop: 8,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap'
 })
 
 export const recomendationsItemPricetyles = style({

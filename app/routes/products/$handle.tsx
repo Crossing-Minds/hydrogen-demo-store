@@ -28,10 +28,16 @@ export const loader = async ({context, params}: LoaderArgs) => {
   }
 
   const {itemIds: variantIdsForPurchasedOrViewed} =
-    await getPersonalizedRecommendations({
+    await getItemBasedRecommendations({
       ...BEAM_REACT_OPTIONS,
       sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
-      maxResults: 8,
+      itemId: getIdFromShopifyEntityId(
+        'ProductVariant',
+        (product as Product).variants.nodes[0]?.id
+      ),
+      options: {
+        maxResults: 8
+      },
       clientOptions: {
         endpointBasePath: 'https://staging-api.crossingminds.com'
       }
@@ -48,16 +54,10 @@ export const loader = async ({context, params}: LoaderArgs) => {
   })
 
   const {itemIds: variantIdsForRecommendations} =
-    await getItemBasedRecommendations({
+    await getPersonalizedRecommendations({
       ...BEAM_REACT_OPTIONS,
       sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
-      itemId: getIdFromShopifyEntityId(
-        'ProductVariant',
-        (product as Product).variants.nodes[0]?.id
-      ),
-      options: {
-        maxResults: 9
-      },
+      maxResults: 8,
       clientOptions: {
         endpointBasePath: 'https://staging-api.crossingminds.com'
       }

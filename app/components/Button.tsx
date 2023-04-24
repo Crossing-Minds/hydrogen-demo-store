@@ -4,7 +4,7 @@ import type {ButtonVariant} from './Button.css'
 import {buttonStyle} from './Button.css'
 
 interface ButtonProps {
-  onClick: () => void
+  onClick?: () => void
   title: string
   variant?: ButtonVariant
 }

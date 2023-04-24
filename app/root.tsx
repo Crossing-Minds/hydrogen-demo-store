@@ -1,12 +1,5 @@
 import {cssBundleHref} from '@remix-run/css-bundle'
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData
-} from '@remix-run/react'
+import {Links, Meta, Outlet, Scripts, ScrollRestoration} from '@remix-run/react'
 import type {Shop} from '@shopify/hydrogen/storefront-api-types'
 import {
   type LinksFunction,
@@ -72,11 +65,6 @@ export async function loader({context}: LoaderArgs) {
 }
 
 export default function App() {
-  const data = useLoaderData<typeof loader>()
-
-  const {name} = data.layout.shop
-  console.log(name)
-
   return (
     <html lang="en">
       <head>
