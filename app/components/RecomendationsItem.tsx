@@ -1,6 +1,6 @@
-import {Link} from '@remix-run/react'
-import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
+
+import type {ProductType} from '~/types/product'
 
 import {Button} from './Button'
 import {ProductImage} from './ProductImage'
@@ -11,7 +11,7 @@ import {
 } from './RecomendationsItem.css'
 
 interface RecomendationsItemProps {
-  product: Product
+  product: ProductType
 }
 
 export const RecomendationsItem: FunctionComponent<RecomendationsItemProps> = ({

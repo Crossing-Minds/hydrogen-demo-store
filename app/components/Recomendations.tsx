@@ -1,6 +1,7 @@
-import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 import {Swiper, SwiperSlide} from 'swiper/react'
+
+import type {ProductType} from '~/types/product'
 
 import {
   recomendationsStyle,
@@ -11,7 +12,7 @@ import {
 import {RecomendationsItem} from './RecomendationsItem'
 
 interface RecomendationsProps {
-  products: Product[]
+  products: ProductType[]
   title: string
 }
 

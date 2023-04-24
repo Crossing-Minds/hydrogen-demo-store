@@ -4,28 +4,22 @@ query product($handle: String!) {
     id
     title
     handle
-    vendor
     descriptionHtml
     media(first: 10) {
       nodes {
         ... on MediaImage {
           mediaContentType
           image {
-            id
             url
-            altText
             width
             height
           }
         }
       }
     }
-    options {
-      name,
-      values
-    }
     variants(first: 10) {
       nodes {
+        id
         price {
           amount
         }
@@ -42,16 +36,13 @@ query products($ids: [ID!]!) {
       id
       title
       handle
-      vendor
       descriptionHtml
       media(first: 10) {
         nodes {
           ... on MediaImage {
             mediaContentType
             image {
-              id
               url
-              altText
               width
               height
             }
@@ -64,6 +55,7 @@ query products($ids: [ID!]!) {
       }
       variants(first: 10) {
         nodes {
+          id
           price {
             amount
           }

@@ -30,7 +30,8 @@
     "isbot": "^3.6.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "swiper": "^9.2.2"
+    "swiper": "^9.2.2",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@remix-run/dev": "1.14.0",
