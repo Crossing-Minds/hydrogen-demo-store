@@ -20,11 +20,11 @@ export const HeaderCart: FunctionComponent<HeaderCartProps> = ({
         {(data: any) => (
           <button className={HeaderCartStyle} onClick={openDrawer}>
             <img alt="Cart Icon" src={cartIcon} width={24} />
-            {data?.totalQuantity && (
+            {data?.totalQuantity ? (
               <span className={HeaderCartQuantityStyle}>
                 {data?.totalQuantity}
               </span>
-            )}
+            ) : undefined}
           </button>
         )}
       </Await>
