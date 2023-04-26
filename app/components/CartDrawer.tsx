@@ -27,7 +27,7 @@ export const CartDrawer: FunctionComponent<HeaderProps> = ({cart, close}) => {
             <div className={CartDrawerInfoStyle}>
               <p>Subtotal</p>
               <p className={CartDrawerSubtotalStyle}>
-                ${data.cost.subtotalAmount.amount} USD
+                ${data?.cost.subtotalAmount.amount || '0.00'} USD
               </p>
               <Button onClick={close} title="Checkout now" />
               <Button
@@ -37,7 +37,7 @@ export const CartDrawer: FunctionComponent<HeaderProps> = ({cart, close}) => {
               />
             </div>
             <div className={CartDrawerProductsStyle}>
-              {data.lines.edges.map(lineEdge => (
+              {data?.lines.edges.map(lineEdge => (
                 <CartDrawerLine
                   key={lineEdge.node.id}
                   cartLineEdge={lineEdge}

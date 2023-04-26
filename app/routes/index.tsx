@@ -1,6 +1,7 @@
 import {getPersonalizedRecommendations} from '@crossingminds/beam-react'
 import {useLoaderData} from '@remix-run/react'
 import type {LoaderArgs, MetaFunction} from '@shopify/remix-oxygen'
+import {json} from '@shopify/remix-oxygen'
 
 import {BEAM_REACT_OPTIONS, getRandomCollectionIds} from '~/beam/config'
 import {Collections} from '~/components/Collections'
@@ -10,6 +11,7 @@ import {OurFavorites} from '~/components/OurFavorites'
 import {Recomendations} from '~/components/Recomendations'
 import {COLLECTIONS_QUERY} from '~/queries/collection'
 import {PRODUCTS_BY_VARIANT_QUERY} from '~/queries/product'
+import {commitSession, getSessionAndSessionId} from '~/sessions'
 
 export const meta: MetaFunction = () => {
   return {
@@ -18,7 +20,9 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export const loader = async ({context}: LoaderArgs) => {
+export const loader = async ({context, request}: LoaderArgs) => {
+  const {session, sessionId} = await getSessionAndSessionId(request)
+
   const collectionIdsForCollections = getRandomCollectionIds(4)
   const {nodes: collectionsForCollections} = await context.storefront.query<
     Promise<any>
@@ -31,7 +35,7 @@ export const loader = async ({context}: LoaderArgs) => {
   const {itemIds: variantIdsForRecommendations} =
     await getPersonalizedRecommendations({
       ...BEAM_REACT_OPTIONS,
-      sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
+      sessionId,
       maxResults: 8,
       clientOptions: {
         endpointBasePath: 'https://staging-api.crossingminds.com'
@@ -60,7 +64,7 @@ export const loader = async ({context}: LoaderArgs) => {
   const {itemIds: variantIdsForOurFavorites} =
     await getPersonalizedRecommendations({
       ...BEAM_REACT_OPTIONS,
-      sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
+      sessionId,
       maxResults: 6,
       clientOptions: {
         endpointBasePath: 'https://staging-api.crossingminds.com'
@@ -77,12 +81,19 @@ export const loader = async ({context}: LoaderArgs) => {
     }
   })
 
-  return {
-    productsForRecommendations,
-    productForOurFavorites,
-    collectionsForCollections,
-    collectionsForNewReleases
-  }
+  return json(
+    {
+      productsForRecommendations,
+      productForOurFavorites,
+      collectionsForCollections,
+      collectionsForNewReleases
+    },
+    {
+      headers: {
+        'Set-Cookie': await commitSession(session)
+      }
+    }
+  )
 }
 
 export default function Index() {

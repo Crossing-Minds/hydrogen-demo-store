@@ -5,14 +5,17 @@ import {
 import {useLoaderData} from '@remix-run/react'
 import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {LoaderArgs} from '@shopify/remix-oxygen'
+import {json} from '@shopify/remix-oxygen'
 
 import {BEAM_REACT_OPTIONS} from '~/beam/config'
 import {ProductDetail} from '~/components/ProductDetail'
 import {Recomendations} from '~/components/Recomendations'
 import {PRODUCTS_BY_VARIANT_QUERY, PRODUCT_QUERY} from '~/queries/product'
+import {commitSession, getSessionAndSessionId} from '~/sessions'
 import {getIdFromShopifyEntityId} from '~/utils/shopify'
 
-export const loader = async ({context, params}: LoaderArgs) => {
+export const loader = async ({context, params, request}: LoaderArgs) => {
+  const {session, sessionId} = await getSessionAndSessionId(request)
   const {handle} = params
   const {product} = await context.storefront.query<Promise<any>>(
     PRODUCT_QUERY,
@@ -30,7 +33,7 @@ export const loader = async ({context, params}: LoaderArgs) => {
   const {itemIds: variantIdsForPurchasedOrViewed} =
     await getItemBasedRecommendations({
       ...BEAM_REACT_OPTIONS,
-      sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
+      sessionId,
       itemId: getIdFromShopifyEntityId(
         'ProductVariant',
         (product as Product).variants.nodes[0]?.id
@@ -56,7 +59,7 @@ export const loader = async ({context, params}: LoaderArgs) => {
   const {itemIds: variantIdsForRecommendations} =
     await getPersonalizedRecommendations({
       ...BEAM_REACT_OPTIONS,
-      sessionId: 'db9c11f3-F85D-417E-F3F5-8543BC1A1DE1',
+      sessionId,
       maxResults: 8,
       clientOptions: {
         endpointBasePath: 'https://staging-api.crossingminds.com'
@@ -73,12 +76,19 @@ export const loader = async ({context, params}: LoaderArgs) => {
     }
   })
 
-  return {
-    handle,
-    product,
-    productForPurchasedOrViewed,
-    productForRecommendations
-  }
+  return json(
+    {
+      handle,
+      product,
+      productForPurchasedOrViewed,
+      productForRecommendations
+    },
+    {
+      headers: {
+        'Set-Cookie': await commitSession(session)
+      }
+    }
+  )
 }
 
 export default function ProductHandle() {
