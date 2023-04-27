@@ -2,9 +2,10 @@ import {useFetcher, useMatches} from '@remix-run/react'
 import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 
-import {Button} from './Button'
+import {AddToCartButton} from './AddToCartButton'
 import {ProductImage} from './ProductImage'
 import {
+  recomendationsItemAddToCartButtonStyles,
   recomendationsItemImageStyle,
   recomendationsItemPricetyles,
   recomendationsItemTitleStyle
@@ -34,7 +35,7 @@ export const RecomendationsItem: FunctionComponent<RecomendationsItemProps> = ({
       <p className={recomendationsItemPricetyles}>
         ${product.variants.nodes[0]?.price.amount}
       </p>
-      <fetcher.Form action="/cart" method="post">
+      <fetcher.Form action="/" method="post">
         <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
         <input
           type="hidden"
@@ -43,7 +44,10 @@ export const RecomendationsItem: FunctionComponent<RecomendationsItemProps> = ({
         />
         <input type="hidden" name="lines" value={JSON.stringify(lines)} />
 
-        <Button title="Add to cart" />
+        <AddToCartButton
+          className={recomendationsItemAddToCartButtonStyles}
+          productVariant={product.variants.nodes[0]?.id as string}
+        />
       </fetcher.Form>
     </>
   )

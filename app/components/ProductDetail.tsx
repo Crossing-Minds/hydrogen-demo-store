@@ -39,7 +39,7 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
           <p className={productDetailAttributeStyle}>Quantity</p>
         </div>
         <div className={productDetailCTAsStyle}>
-          <fetcher.Form action="/cart" method="post">
+          <fetcher.Form action="/" method="post">
             <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
             <input
               type="hidden"
@@ -49,7 +49,7 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
             <input type="hidden" name="lines" value={JSON.stringify(lines)} />
             <Button title="Add to cart" variant="outlined" />
           </fetcher.Form>
-          <fetcher.Form action="/cart" method="post">
+          <fetcher.Form action="/" method="post">
             <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
             <input
               type="hidden"

@@ -1,6 +1,8 @@
-import {useFetchers, useMatches} from '@remix-run/react'
+import {useMatches} from '@remix-run/react'
 import type {FunctionComponent, PropsWithChildren} from 'react'
-import {useEffect, useMemo} from 'react'
+import {useEffect, useState} from 'react'
+
+import {useCartFetchers} from '~/hooks/useCartFetchers'
 
 import {CartDrawer} from './CartDrawer'
 import {Drawer, useDrawer} from './Drawer'
@@ -16,22 +18,25 @@ export const Layout: FunctionComponent<PropsWithChildren<object>> = ({
   children
 }) => {
   const {closeDrawer, isOpen, openDrawer} = useDrawer()
-  const fetchers = useFetchers()
   const [root] = useMatches()
   const cart = root?.data?.cart
 
-  const addToCartFetchers = useMemo(() => {
-    return fetchers.filter(
-      fetcher =>
-        fetcher?.submission?.formData?.get('cartAction') === 'ADD_TO_CART'
-    )
-  }, [fetchers])
+  const addToCartFetchers = useCartFetchers('ADD_TO_CART')
+  const [activeAddToCartFetchersCount, setActiveAddToCartFetchersCount] =
+    useState(0)
 
   useEffect(() => {
-    if (!isOpen && addToCartFetchers.length) {
+    if (
+      !isOpen &&
+      !addToCartFetchers.length &&
+      activeAddToCartFetchersCount === 1
+    ) {
       openDrawer()
+      setActiveAddToCartFetchersCount(0)
+    } else {
+      setActiveAddToCartFetchersCount(addToCartFetchers.length)
     }
-  }, [addToCartFetchers, isOpen, openDrawer])
+  }, [addToCartFetchers, activeAddToCartFetchersCount, isOpen, openDrawer])
 
   return (
     <div className={layoutStyle}>

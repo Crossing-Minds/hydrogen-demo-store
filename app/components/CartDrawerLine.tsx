@@ -36,7 +36,7 @@ export const CartDrawerLine: FunctionComponent<HeaderProps> = ({
         </div>
         <div className={CartDrawerLineActionsWrapperStyle}>
           <p>Qty: {cartLineEdge.node.quantity}</p>
-          <fetcher.Form action="/cart" method="post">
+          <fetcher.Form action="/" method="post">
             <input type="hidden" name="cartAction" value="REMOVE_FROM_CART" />
             <input
               type="hidden"

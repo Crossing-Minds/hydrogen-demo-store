@@ -30,3 +30,7 @@ export const recomendationsItemPricetyles = style({
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap'
 })
+
+export const recomendationsItemAddToCartButtonStyles = style({
+  minWidth: 120
+})
