@@ -18,7 +18,12 @@ export const CollectionProduct: FunctionComponent<CollectionProductProps> = ({
 }) => {
   return (
     <div className={collectionProductStyle}>
-      <ProductImage className={collectionProductImageStyle} product={product} />
+      <a href={`/products/${product.handle}`}>
+        <ProductImage
+          className={collectionProductImageStyle}
+          product={product}
+        />
+      </a>
       <p className={collectionProductNameStyle}>{product.title}</p>
       <p className={collectionProductPriceStyle}>
         ${product.variants.nodes[0]?.price.amount}
