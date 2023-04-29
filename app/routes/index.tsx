@@ -3,7 +3,6 @@ import {
   getPersonalizedRecommendations,
   getPropertyRecommendations
 } from '@crossingminds/beam-react'
-import {run} from '@crossingminds/utils'
 import {useLoaderData} from '@remix-run/react'
 import type {LoaderArgs, MetaFunction} from '@shopify/remix-oxygen'
 import {json} from '@shopify/remix-oxygen'

@@ -69,6 +69,11 @@ export const buttonStyle = styleVariants<
   ]
 })
 
+export const buttonDisabledStyle = style({
+  cursor: 'unset',
+  opacity: 0.5
+})
+
 export const buttonLoadingStyle = style({
   background: vars.colors.lightGrey04,
   cursor: 'unset'

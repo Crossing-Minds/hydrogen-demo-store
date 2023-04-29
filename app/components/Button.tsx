@@ -2,10 +2,16 @@ import classNames from 'classnames'
 import type {FunctionComponent} from 'react'
 
 import type {ButtonVariant} from './Button.css'
-import {buttonLoaderStyle, buttonLoadingStyle, buttonStyle} from './Button.css'
+import {
+  buttonDisabledStyle,
+  buttonLoaderStyle,
+  buttonLoadingStyle,
+  buttonStyle
+} from './Button.css'
 
 interface ButtonProps {
   className?: string
+  disabled?: boolean
   loading?: boolean
   onClick?: () => void
   title: string
@@ -14,6 +20,7 @@ interface ButtonProps {
 
 export const Button: FunctionComponent<ButtonProps> = ({
   className,
+  disabled = false,
   loading = false,
   onClick,
   title,
@@ -24,11 +31,12 @@ export const Button: FunctionComponent<ButtonProps> = ({
       className={classNames(
         buttonStyle[variant],
         {
+          [buttonDisabledStyle]: disabled,
           [buttonLoadingStyle]: loading
         },
         className
       )}
-      disabled={loading}
+      disabled={disabled || loading}
       onClick={onClick}
     >
       {loading ? <span className={buttonLoaderStyle} /> : title}

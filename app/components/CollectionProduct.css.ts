@@ -1,8 +1,6 @@
 import {style} from '@vanilla-extract/css'
 
-import {vars} from '~/styles/theme.css'
-
-export const productListItemStyle = style({
+export const collectionProductStyle = style({
   display: 'flex',
   flex: '1 0 40%',
   flexDirection: 'column',
@@ -14,19 +12,20 @@ export const productListItemStyle = style({
   }
 })
 
-export const productListItemImageStyle = style({
-  background: vars.colors.lightGrey04,
+export const collectionProductImageStyle = style({
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
   borderRadius: 4,
   height: 256
 })
 
-export const productListItemNameStyle = style({
+export const collectionProductNameStyle = style({
   fontSize: 14,
   fontWeight: 400,
   lineHeight: '20px'
 })
 
-export const productListItemPriceStyle = style({
+export const collectionProductPriceStyle = style({
   fontSize: 14,
   fontWeight: 400,
   lineHeight: '20px'

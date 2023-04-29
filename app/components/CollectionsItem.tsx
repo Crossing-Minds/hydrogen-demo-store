@@ -14,7 +14,7 @@ export const CollectionsItem: FunctionComponent<CollectionsItemProps> = ({
   collection
 }) => {
   return (
-    <>
+    <a href={`/collections/${collection.handle}`}>
       <div
         className={collectionsItemImageStyle}
         style={{
@@ -22,6 +22,6 @@ export const CollectionsItem: FunctionComponent<CollectionsItemProps> = ({
         }}
       ></div>
       <p className={collectionsItemTitleStyle}>{collection.title}</p>
-    </>
+    </a>
   )
 }

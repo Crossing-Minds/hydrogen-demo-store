@@ -1,7 +1,7 @@
 import {Await} from '@remix-run/react'
 import type {Cart} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
-import {Suspense, useEffect, useMemo} from 'react'
+import {Suspense} from 'react'
 
 import {Button} from './Button'
 import {
@@ -20,8 +20,6 @@ interface HeaderProps {
 }
 
 export const CartDrawer: FunctionComponent<HeaderProps> = ({cart, close}) => {
-  const products: any[] = []
-
   return (
     <Suspense>
       <Await resolve={cart}>

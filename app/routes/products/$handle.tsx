@@ -8,7 +8,7 @@ import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {LoaderArgs} from '@shopify/remix-oxygen'
 import {json} from '@shopify/remix-oxygen'
 
-import {BEAM_REACT_OPTIONS} from '~/beam/config'
+import {BEAM_REACT_OPTIONS, getRandomProductVariantIds} from '~/beam/config'
 import {ProductDetail} from '~/components/ProductDetail'
 import {Recomendations} from '~/components/Recomendations'
 import {PRODUCTS_BY_VARIANT_QUERY, PRODUCT_QUERY} from '~/queries/product'
@@ -54,6 +54,7 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
     }
   })
 
+  // TODO: when personalized recommendations are working, use the following code
   // const {itemIds: variantIdsForRecommendations} =
   //   await getPersonalizedRecommendations({
   //     ...BEAM_REACT_OPTIONS,
@@ -61,23 +62,24 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
   //     maxResults: 8,
   //     sessionScenario: SCENARIO_OMITTED // TODO: add scenario
   //   })
+  const variantIdsForRecommendations = getRandomProductVariantIds(8)
 
-  // const {nodes: productForRecommendations} = await context.storefront.query<
-  //   Promise<any>
-  // >(PRODUCTS_BY_VARIANT_QUERY, {
-  //   variables: {
-  //     ids: variantIdsForRecommendations.map(
-  //       variantId => `gid://shopify/ProductVariant/${variantId}`
-  //     )
-  //   }
-  // })
+  const {nodes: productForRecommendations} = await context.storefront.query<
+    Promise<any>
+  >(PRODUCTS_BY_VARIANT_QUERY, {
+    variables: {
+      ids: variantIdsForRecommendations.map(
+        variantId => `gid://shopify/ProductVariant/${variantId}`
+      )
+    }
+  })
 
   return json(
     {
       handle,
       product,
       productForPurchasedOrViewed,
-      productForRecommendations: []
+      productForRecommendations
     },
     {
       headers: {
