@@ -1,4 +1,4 @@
-import {type LoaderArgs, json} from '@shopify/remix-oxygen'
+import {type LoaderArgs, json, redirect} from '@shopify/remix-oxygen'
 
 import {PRODUCTS_BY_VARIANT_QUERY} from '~/queries/product'
 
@@ -26,6 +26,10 @@ export async function action({request, context}: LoaderArgs) {
   return json(nodes)
 }
 
+export const loader = async () => {
+  return redirect('/')
+}
+
 export default function CartRecommendations() {
-  return <p>Cart Recommendations</p>
+  return <></>
 }
