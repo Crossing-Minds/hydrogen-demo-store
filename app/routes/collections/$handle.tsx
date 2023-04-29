@@ -26,13 +26,6 @@ export async function action({context, params, request}: LoaderArgs) {
     }
   })
 
-  console.log('products', products, {
-    variables: {
-      ...pageInfo,
-      handle
-    }
-  })
-
   return json(products)
 }
 

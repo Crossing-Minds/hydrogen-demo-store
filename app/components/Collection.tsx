@@ -38,7 +38,7 @@ export const Collection: FunctionComponent<CollectionProps> = ({
       {
         pageInfo: JSON.stringify({
           first: 12,
-          startCursor
+          startCursor: endCursor
         })
       },
       {method: 'post', action: `/collections/${collection.handle}`}
@@ -50,7 +50,7 @@ export const Collection: FunctionComponent<CollectionProps> = ({
       {
         pageInfo: JSON.stringify({
           last: 12,
-          endCursor
+          endCursor: startCursor
         })
       },
       {method: 'post', action: `/collections/${collection.handle}`}

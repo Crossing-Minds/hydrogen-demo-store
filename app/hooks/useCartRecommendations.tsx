@@ -51,7 +51,6 @@ export function useCartRecommendations() {
 
   const updateRecommendations = async (cart: Cart) => {
     if (cartHasChanged(cart)) {
-      console.log('updating recommendations', cart)
       setCartRecommendationsLoading(true)
       setCartRecommendationsError(false)
       setPreviousCart(cart)
@@ -74,7 +73,6 @@ export function useCartRecommendations() {
           sessionScenario: SCENARIO_OMITTED, // TODO: add scenario name
           maxResults: 8
         })
-        console.log('itemIds', itemIds)
 
         fetcher.submit(
           {itemIds: JSON.stringify(itemIds)},
