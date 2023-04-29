@@ -1,7 +1,7 @@
 import {Await} from '@remix-run/react'
 import type {Cart} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
-import {Suspense} from 'react'
+import {Suspense, useEffect, useMemo} from 'react'
 
 import {Button} from './Button'
 import {
@@ -12,6 +12,7 @@ import {
   CartDrawerSubtotalStyle
 } from './CartDrawer.css'
 import {CartDrawerLine} from './CartDrawerLine'
+import {CartRecomendations} from './CartRecommendations'
 
 interface HeaderProps {
   cart: Cart
@@ -19,6 +20,8 @@ interface HeaderProps {
 }
 
 export const CartDrawer: FunctionComponent<HeaderProps> = ({cart, close}) => {
+  const products: any[] = []
+
   return (
     <Suspense>
       <Await resolve={cart}>
@@ -44,7 +47,12 @@ export const CartDrawer: FunctionComponent<HeaderProps> = ({cart, close}) => {
                 />
               ))}
             </div>
-            <div className={CartDrawerRecommendationsStyle}></div>
+            <div className={CartDrawerRecommendationsStyle}>
+              <CartRecomendations
+                cart={data}
+                title="Frequently purchased together"
+              />
+            </div>
           </div>
         )}
       </Await>

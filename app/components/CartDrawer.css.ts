@@ -29,7 +29,6 @@ export const CartDrawerProductsStyle = style({
 })
 
 export const CartDrawerRecommendationsStyle = style({
-  background: 'red',
-  height: 260,
+  height: 310,
   width: '100%'
 })

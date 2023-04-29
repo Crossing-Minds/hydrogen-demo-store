@@ -8,21 +8,21 @@ import {BEAM_REACT_OPTIONS} from '~/beam/config'
 import {sessionId} from '~/utils/sessionId.client'
 
 import {AddToCartButton} from './AddToCartButton'
-import {ProductImage} from './ProductImage'
 import {
-  recomendationsItemAddToCartButtonStyles,
-  recomendationsItemImageStyle,
-  recomendationsItemPricetyles,
-  recomendationsItemTitleStyle
-} from './RecomendationsItem.css'
+  cartRecomendationsItemAddToCartButtonStyles,
+  cartRecomendationsItemImageStyle,
+  cartRecomendationsItemPricetyles,
+  cartRecomendationsItemTitleStyle
+} from './CartRecomendationsItem.css'
+import {ProductImage} from './ProductImage'
 
-interface RecomendationsItemProps {
+interface CartRecomendationsItemProps {
   product: Product
 }
 
-export const RecomendationsItem: FunctionComponent<RecomendationsItemProps> = ({
-  product
-}) => {
+export const CartRecomendationsItem: FunctionComponent<
+  CartRecomendationsItemProps
+> = ({product}) => {
   const [root] = useMatches()
   const selectedLocale = root?.data?.selectedLocale
   const fetcher = useFetcher()
@@ -44,12 +44,12 @@ export const RecomendationsItem: FunctionComponent<RecomendationsItemProps> = ({
         onClick={() => itemId && recordItemClickInteraction(itemId)}
       >
         <ProductImage
-          className={recomendationsItemImageStyle}
+          className={cartRecomendationsItemImageStyle}
           product={product}
         />
-        <p className={recomendationsItemTitleStyle}>{product.title}</p>
+        <p className={cartRecomendationsItemTitleStyle}>{product.title}</p>
       </a>
-      <p className={recomendationsItemPricetyles}>
+      <p className={cartRecomendationsItemPricetyles}>
         ${product.variants.nodes[0]?.price.amount}
       </p>
       <fetcher.Form
@@ -66,7 +66,7 @@ export const RecomendationsItem: FunctionComponent<RecomendationsItemProps> = ({
         <input type="hidden" name="lines" value={JSON.stringify(lines)} />
 
         <AddToCartButton
-          className={recomendationsItemAddToCartButtonStyles}
+          className={cartRecomendationsItemAddToCartButtonStyles}
           productVariant={product.variants.nodes[0]?.id as string}
         />
       </fetcher.Form>

@@ -1,4 +1,5 @@
 import {
+  SCENARIO_OMITTED,
   getItemBasedRecommendations,
   getPersonalizedRecommendations
 } from '@crossingminds/beam-react'
@@ -40,9 +41,6 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
       ),
       options: {
         maxResults: 8
-      },
-      clientOptions: {
-        endpointBasePath: 'https://staging-api.crossingminds.com'
       }
     })
 
@@ -56,32 +54,30 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
     }
   })
 
-  const {itemIds: variantIdsForRecommendations} =
-    await getPersonalizedRecommendations({
-      ...BEAM_REACT_OPTIONS,
-      sessionId,
-      maxResults: 8,
-      clientOptions: {
-        endpointBasePath: 'https://staging-api.crossingminds.com'
-      }
-    })
+  // const {itemIds: variantIdsForRecommendations} =
+  //   await getPersonalizedRecommendations({
+  //     ...BEAM_REACT_OPTIONS,
+  //     sessionId,
+  //     maxResults: 8,
+  //     sessionScenario: SCENARIO_OMITTED // TODO: add scenario
+  //   })
 
-  const {nodes: productForRecommendations} = await context.storefront.query<
-    Promise<any>
-  >(PRODUCTS_BY_VARIANT_QUERY, {
-    variables: {
-      ids: variantIdsForRecommendations.map(
-        variantId => `gid://shopify/ProductVariant/${variantId}`
-      )
-    }
-  })
+  // const {nodes: productForRecommendations} = await context.storefront.query<
+  //   Promise<any>
+  // >(PRODUCTS_BY_VARIANT_QUERY, {
+  //   variables: {
+  //     ids: variantIdsForRecommendations.map(
+  //       variantId => `gid://shopify/ProductVariant/${variantId}`
+  //     )
+  //   }
+  // })
 
   return json(
     {
       handle,
       product,
       productForPurchasedOrViewed,
-      productForRecommendations
+      productForRecommendations: []
     },
     {
       headers: {
@@ -102,10 +98,12 @@ export default function ProductHandle() {
         products={productForPurchasedOrViewed}
         title="Customers also purchased or viewed"
       />
-      <Recomendations
-        products={productForRecommendations}
-        title="Recommendations for you"
-      />
+      {productForRecommendations?.length ? (
+        <Recomendations
+          products={productForRecommendations}
+          title="Recommendations for you"
+        />
+      ) : undefined}
     </>
   )
 }

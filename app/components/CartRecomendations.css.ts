@@ -1,32 +1,43 @@
-import {globalStyle, style} from '@vanilla-extract/css'
+import {globalStyle, keyframes, style} from '@vanilla-extract/css'
 
 import {vars} from '~/styles/theme.css'
 
-export const recomendationsStyle = style({
+export const cartRecomendationsStyle = style({
   marginBottom: 88,
   paddingTop: 48
 })
 
-export const recomendationsTitleStyle = style({
+export const cartRecomendationsTitleStyle = style({
   color: vars.colors.black,
-  fontSize: 22,
-  lineHeight: '30px',
-  marginBottom: 32
+  fontSize: 16,
+  fontWeight: 600,
+  lineHeight: '24px',
+  marginBottom: 16
 })
 
-export const recomendationsSwiperWrapperStyle = style({
-  height: 365,
+export const cartRecomendationsSwiperWrapperStyle = style({
+  height: 225,
   width: '100%'
 })
 
-globalStyle(`${recomendationsSwiperWrapperStyle} .swiper`, {
+globalStyle(`${cartRecomendationsSwiperWrapperStyle} .swiper`, {
   height: '100%'
 })
 
-globalStyle(`${recomendationsSwiperWrapperStyle} .swiper-slide`, {
+globalStyle(`${cartRecomendationsSwiperWrapperStyle} .swiper-slide`, {
   borderRadius: 4,
   height: '100%',
-  width: 218
+  width: 122
 })
 
-export const recomendationsSwipperStyle = style({})
+const flicker = keyframes({
+  '0%': {opacity: 1},
+  '50%': {opacity: 0.5},
+  '100%': {opacity: 1}
+})
+
+export const cartRecomendationsLoadingStyle = style({
+  animationDuration: '1.2s',
+  animationIterationCount: 'infinite',
+  animationName: flicker
+})

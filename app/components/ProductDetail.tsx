@@ -1,6 +1,11 @@
+import {useRecordItemInteractions} from '@crossingminds/beam-react'
 import {useFetcher, useMatches} from '@remix-run/react'
 import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
+import {useEffect, useMemo} from 'react'
+
+import {BEAM_REACT_OPTIONS} from '~/beam/config'
+import {sessionId} from '~/utils/sessionId.client'
 
 import {Button} from './Button'
 import {
@@ -25,6 +30,23 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
   const fetcher = useFetcher()
   const lines = [{merchandiseId: product.variants.nodes[0]?.id, quantity: 1}]
 
+  const {recordItemPageViewInteraction, recordAddItemToCartInteraction} =
+    useRecordItemInteractions({
+      ...BEAM_REACT_OPTIONS,
+      sessionId
+    })
+
+  const itemId = useMemo(
+    () => product?.variants?.nodes?.[0]?.id?.split('/').at(-1),
+    [product?.variants?.nodes]
+  )
+
+  useEffect(() => {
+    if (itemId) {
+      recordItemPageViewInteraction(itemId)
+    }
+  }, [itemId, product.variants.nodes, recordItemPageViewInteraction])
+
   return (
     <div className={productDetailStyle}>
       <ProductImage className={productDetailImageStyle} product={product} />
@@ -39,7 +61,11 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
           <p className={productDetailAttributeStyle}>Quantity</p>
         </div>
         <div className={productDetailCTAsStyle}>
-          <fetcher.Form action="/" method="post">
+          <fetcher.Form
+            action="/"
+            method="post"
+            onSubmit={() => itemId && recordAddItemToCartInteraction(itemId)}
+          >
             <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
             <input
               type="hidden"
@@ -49,7 +75,11 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
             <input type="hidden" name="lines" value={JSON.stringify(lines)} />
             <Button title="Add to cart" variant="outlined" />
           </fetcher.Form>
-          <fetcher.Form action="/" method="post">
+          <fetcher.Form
+            action="/"
+            method="post"
+            onSubmit={() => itemId && recordAddItemToCartInteraction(itemId)}
+          >
             <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
             <input
               type="hidden"

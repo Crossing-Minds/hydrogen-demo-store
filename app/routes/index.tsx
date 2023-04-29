@@ -1,9 +1,18 @@
-import {getPersonalizedRecommendations} from '@crossingminds/beam-react'
+import {
+  SCENARIO_OMITTED,
+  getPersonalizedRecommendations,
+  getPropertyRecommendations
+} from '@crossingminds/beam-react'
+import {run} from '@crossingminds/utils'
 import {useLoaderData} from '@remix-run/react'
 import type {LoaderArgs, MetaFunction} from '@shopify/remix-oxygen'
 import {json} from '@shopify/remix-oxygen'
 
-import {BEAM_REACT_OPTIONS, getRandomCollectionIds} from '~/beam/config'
+import {
+  BEAM_REACT_OPTIONS,
+  getRandomCollectionIds,
+  getRandomProductVariantIds
+} from '~/beam/config'
 import {Collections} from '~/components/Collections'
 import {HeroBanner} from '~/components/HeroBanner'
 import {NewReleases} from '~/components/NewReleases'
@@ -23,7 +32,21 @@ export const meta: MetaFunction = () => {
 export const loader = async ({context, request}: LoaderArgs) => {
   const {session, sessionId} = await getSessionAndSessionId(request)
 
+  // TODO: when "collections" property is available, use the following code
+  // const {itemProperties: collectionIdsForCollections} =
+  //   await getPropertyRecommendations({
+  //     ...BEAM_REACT_OPTIONS,
+  //     sessionId,
+  //     sessionPropertiesScenario: SCENARIO_OMITTED, // TODO: add scenario
+  //     propertyName: 'collections',
+  //     maxResults: 6,
+  //     clientOptions: {
+  //       endpointBasePath: 'https://staging-api.crossingminds.com'
+  //     }
+  //   })
+
   const collectionIdsForCollections = getRandomCollectionIds(4)
+
   const {nodes: collectionsForCollections} = await context.storefront.query<
     Promise<any>
   >(COLLECTIONS_QUERY, {
@@ -32,15 +55,15 @@ export const loader = async ({context, request}: LoaderArgs) => {
     }
   })
 
-  const {itemIds: variantIdsForRecommendations} =
-    await getPersonalizedRecommendations({
-      ...BEAM_REACT_OPTIONS,
-      sessionId,
-      maxResults: 8,
-      clientOptions: {
-        endpointBasePath: 'https://staging-api.crossingminds.com'
-      }
-    })
+  // TODO: when personalized recommendations are working, use the following code
+  // const {itemIds: variantIdsForRecommendations} =
+  //   await getPersonalizedRecommendations({
+  //     ...BEAM_REACT_OPTIONS,
+  //     sessionId,
+  //     sessionScenario: SCENARIO_OMITTED,
+  //     maxResults: 8
+  //   })
+  const variantIdsForRecommendations = getRandomProductVariantIds(8)
 
   const {nodes: productsForRecommendations} = await context.storefront.query<
     Promise<any>
@@ -61,15 +84,15 @@ export const loader = async ({context, request}: LoaderArgs) => {
     }
   })
 
-  const {itemIds: variantIdsForOurFavorites} =
-    await getPersonalizedRecommendations({
-      ...BEAM_REACT_OPTIONS,
-      sessionId,
-      maxResults: 6,
-      clientOptions: {
-        endpointBasePath: 'https://staging-api.crossingminds.com'
-      }
-    })
+  // TODO: when personalized recommendations are working, use the following code
+  // const {itemIds: variantIdsForOurFavorites} =
+  //   await getPersonalizedRecommendations({
+  //     ...BEAM_REACT_OPTIONS,
+  //     sessionId,
+  //     sessionScenario: SCENARIO_OMITTED,
+  //     maxResults: 6
+  //   })
+  const variantIdsForOurFavorites = getRandomProductVariantIds(6)
 
   const {nodes: productForOurFavorites} = await context.storefront.query<
     Promise<any>
