@@ -8,7 +8,7 @@ import cookies from 'js-cookie'
 import {useEffect, useMemo, useState} from 'react'
 
 import {BEAM_REACT_OPTIONS} from '~/beam/config'
-import {getIdFromShopifyEntityId} from '~/utils/shopify'
+import {SHOPIFY_ENTITY_TYPES, getIdFromShopifyEntityId} from '~/utils/shopify'
 
 export function useCartRecommendations() {
   const fetcher = useFetcher()
@@ -59,7 +59,7 @@ export function useCartRecommendations() {
         const contextItems = cart.lines.edges.map(lineEdge => {
           return {
             itemId: getIdFromShopifyEntityId(
-              'ProductVariant',
+              SHOPIFY_ENTITY_TYPES.PRODUCT_VARIANT,
               lineEdge.node.merchandise.id
             )
           }

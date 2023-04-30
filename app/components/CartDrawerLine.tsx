@@ -6,6 +6,7 @@ import {useMemo} from 'react'
 
 import iconDelete from '~/assets/icon-delete.svg'
 import {useCartFetchers} from '~/hooks/useCartFetchers'
+import {SHOPIFY_ENTITY_TYPES, getIdFromShopifyEntityId} from '~/utils/shopify'
 
 import {
   CartDrawerDeletingLineStyle,
@@ -28,6 +29,7 @@ export const CartDrawerLine: FunctionComponent<HeaderProps> = ({
 }) => {
   const fetcher = useFetcher()
   const removeFromCartFetchers = useCartFetchers('REMOVE_FROM_CART')
+
   const isDeletingLine = useMemo(() => {
     return !!removeFromCartFetchers.find(removeFromCartFetcher => {
       let linesIds: string[] = []
@@ -48,16 +50,29 @@ export const CartDrawerLine: FunctionComponent<HeaderProps> = ({
     })
   }, [removeFromCartFetchers])
 
+  const productVariantId = useMemo(
+    () =>
+      getIdFromShopifyEntityId(
+        SHOPIFY_ENTITY_TYPES.PRODUCT_VARIANT,
+        cartLineEdge.node.merchandise.id
+      ),
+    [cartLineEdge]
+  )
+
   return (
     <div
       className={classNames(CartDrawerLineStyle, {
         [CartDrawerDeletingLineStyle]: isDeletingLine
       })}
     >
-      <ProductImage
-        cartLineEdge={cartLineEdge}
-        className={CartDrawerLineImageStyle}
-      />
+      <a
+        href={`/products/${cartLineEdge.node.merchandise.product.handle}?variant=${productVariantId}`}
+      >
+        <ProductImage
+          cartLineEdge={cartLineEdge}
+          className={CartDrawerLineImageStyle}
+        />
+      </a>
       <div className={CartDrawerLineInfoWrapperStyle}>
         <div className={CartDrawerLineInfoStyle}>
           <p>{cartLineEdge.node.merchandise.product.title}</p>

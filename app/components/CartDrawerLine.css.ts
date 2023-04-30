@@ -40,7 +40,9 @@ export const CartDrawerLineInfoStyle = style({
 })
 
 export const CartDrawerLineActionsWrapperStyle = style({
+  alignItems: 'center',
   display: 'flex',
+  height: 24,
   justifyContent: 'space-between'
 })
 

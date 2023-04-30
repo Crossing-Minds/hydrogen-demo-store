@@ -17,6 +17,7 @@ import {
 import {commitSession, getSessionAndSessionId} from '~/sessions'
 import {removeDuplicatedIds} from '~/utils/recommendations'
 import {
+  SHOPIFY_ENTITY_TYPES,
   getIdFromShopifyEntityId,
   getShopifyEntityIdFromId
 } from '~/utils/shopify'
@@ -35,7 +36,10 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
     PRODUCT_BY_VARIANT_QUERY,
     {
       variables: {
-        id: getShopifyEntityIdFromId('ProductVariant', variant)
+        id: getShopifyEntityIdFromId(
+          SHOPIFY_ENTITY_TYPES.PRODUCT_VARIANT,
+          variant
+        )
       }
     }
   )
@@ -48,7 +52,10 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
     await getItemBasedRecommendations({
       ...BEAM_REACT_OPTIONS,
       sessionId,
-      itemId: getIdFromShopifyEntityId('ProductVariant', productVariant.id),
+      itemId: getIdFromShopifyEntityId(
+        SHOPIFY_ENTITY_TYPES.PRODUCT_VARIANT,
+        productVariant.id
+      ),
       options: {
         maxResults: 8
       }

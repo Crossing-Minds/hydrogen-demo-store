@@ -8,11 +8,13 @@ import {buttonLoaderStyle, buttonLoadingStyle, buttonStyle} from './Button.css'
 interface ButtonProps {
   className?: string
   productVariantShopifyId: string
+  title?: string
 }
 
 export const AddToCartButton: FunctionComponent<ButtonProps> = ({
   className,
-  productVariantShopifyId
+  productVariantShopifyId,
+  title = 'Add to cart'
 }) => {
   const [productVariantFetcher] = useCartFetchers(
     'ADD_TO_CART',
@@ -33,7 +35,7 @@ export const AddToCartButton: FunctionComponent<ButtonProps> = ({
       )}
       disabled={loading}
     >
-      {loading ? <span className={buttonLoaderStyle} /> : 'Add to cart'}
+      {loading ? <span className={buttonLoaderStyle} /> : title}
     </button>
   )
 }

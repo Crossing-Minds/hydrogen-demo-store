@@ -6,9 +6,9 @@ import {useEffect, useMemo} from 'react'
 
 import {BEAM_REACT_OPTIONS} from '~/beam/config'
 import {sessionId} from '~/utils/sessionId.client'
-import {getIdFromShopifyEntityId} from '~/utils/shopify'
+import {SHOPIFY_ENTITY_TYPES, getIdFromShopifyEntityId} from '~/utils/shopify'
 
-import {Button} from './Button'
+import {AddToCartButton} from './AddToCartButton'
 import {
   productDetailAttributeStyle,
   productDetailCTAsStyle,
@@ -40,7 +40,11 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({
     })
 
   const productVariantId = useMemo(
-    () => getIdFromShopifyEntityId('ProductVariant', productVariant.id),
+    () =>
+      getIdFromShopifyEntityId(
+        SHOPIFY_ENTITY_TYPES.PRODUCT_VARIANT,
+        productVariant.id
+      ),
     [productVariant]
   )
 
@@ -84,24 +88,7 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({
               value={selectedLocale?.country ?? 'US'}
             />
             <input type="hidden" name="lines" value={JSON.stringify(lines)} />
-            <Button title="Add to cart" variant="outlined" />
-          </fetcher.Form>
-          <fetcher.Form
-            action="/"
-            method="post"
-            onSubmit={() =>
-              productVariantId &&
-              recordAddItemToCartInteraction(productVariantId)
-            }
-          >
-            <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
-            <input
-              type="hidden"
-              name="countryCode"
-              value={selectedLocale?.country ?? 'US'}
-            />
-            <input type="hidden" name="lines" value={JSON.stringify(lines)} />
-            <Button title="Buy it now" />
+            <AddToCartButton productVariantShopifyId={productVariant.id} />
           </fetcher.Form>
         </div>
         <div

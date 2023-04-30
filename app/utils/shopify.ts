@@ -1,3 +1,8 @@
+export enum SHOPIFY_ENTITY_TYPES {
+  COLLECTION = 'Collection',
+  PRODUCT_VARIANT = 'ProductVariant'
+}
+
 export const getIdFromShopifyEntityId = (
   entityId: string,
   shopifyId: string

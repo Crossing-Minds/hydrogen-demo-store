@@ -5,7 +5,7 @@ import {useMemo} from 'react'
 
 import {BEAM_REACT_OPTIONS} from '~/beam/config'
 import {sessionId} from '~/utils/sessionId.client'
-import {getIdFromShopifyEntityId} from '~/utils/shopify'
+import {SHOPIFY_ENTITY_TYPES, getIdFromShopifyEntityId} from '~/utils/shopify'
 
 import {
   ourFavoritesItemImageStyle,
@@ -27,7 +27,11 @@ export const OurFavoritesItem: FunctionComponent<OurFavoritesItemProps> = ({
   })
 
   const productVariantId = useMemo(
-    () => getIdFromShopifyEntityId('ProductVariant', productVariant.id),
+    () =>
+      getIdFromShopifyEntityId(
+        SHOPIFY_ENTITY_TYPES.PRODUCT_VARIANT,
+        productVariant.id
+      ),
     [productVariant]
   )
 
