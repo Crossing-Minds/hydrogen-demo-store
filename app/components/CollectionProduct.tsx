@@ -1,5 +1,14 @@
-import type {Product} from '@shopify/hydrogen/storefront-api-types'
+import {useRecordItemInteractions} from '@crossingminds/beam-react'
+import type {
+  Product,
+  ProductVariant
+} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
+import {useMemo} from 'react'
+
+import {BEAM_REACT_OPTIONS} from '~/beam/config'
+import {sessionId} from '~/utils/sessionId.client'
+import {getIdFromShopifyEntityId} from '~/utils/shopify'
 
 import {
   collectionProductImageStyle,
@@ -16,17 +25,38 @@ interface CollectionProductProps {
 export const CollectionProduct: FunctionComponent<CollectionProductProps> = ({
   product
 }) => {
+  const {recordItemClickInteraction} = useRecordItemInteractions({
+    ...BEAM_REACT_OPTIONS,
+    sessionId
+  })
+
+  const productVariant = useMemo(() => {
+    return product.variants.nodes[0] as ProductVariant
+  }, [product])
+
+  const productVariantId = useMemo(
+    () => getIdFromShopifyEntityId('ProductVariant', productVariant.id),
+    [productVariant]
+  )
+
   return (
     <div className={collectionProductStyle}>
-      <a href={`/products/${product.handle}`}>
+      <a
+        href={`/products/${productVariant.product.handle}?variant=${productVariantId}`}
+        onClick={() =>
+          productVariantId && recordItemClickInteraction(productVariantId)
+        }
+      >
         <ProductImage
           className={collectionProductImageStyle}
-          product={product}
+          productVariant={productVariant}
         />
       </a>
-      <p className={collectionProductNameStyle}>{product.title}</p>
+      <p className={collectionProductNameStyle}>
+        {productVariant.product.title}
+      </p>
       <p className={collectionProductPriceStyle}>
-        ${product.variants.nodes[0]?.price.amount}
+        ${productVariant.price.amount}
       </p>
     </div>
   )

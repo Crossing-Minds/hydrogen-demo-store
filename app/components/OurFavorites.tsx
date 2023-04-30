@@ -1,4 +1,4 @@
-import type {Product} from '@shopify/hydrogen/storefront-api-types'
+import type {ProductVariant} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 
 import {
@@ -9,21 +9,21 @@ import {
 import {OurFavoritesItem} from './OurFavoritesItem'
 
 interface OurFavoritesProps {
-  products: {
-    id: string
-    product: Product
-  }[]
+  productVariants: ProductVariant[]
 }
 
 export const OurFavorites: FunctionComponent<OurFavoritesProps> = ({
-  products
+  productVariants
 }) => {
   return (
     <div className={ourFavoritesStyle}>
       <h2 className={ourFavoritesTitleStyle}>Our favorites</h2>
       <div className={ourFavoritesWrapperStyle}>
-        {products.map(product => (
-          <OurFavoritesItem key={product.id} product={product.product} />
+        {productVariants.map(productVariant => (
+          <OurFavoritesItem
+            key={productVariant.id}
+            productVariant={productVariant}
+          />
         ))}
       </div>
     </div>

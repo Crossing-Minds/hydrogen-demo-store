@@ -2,13 +2,13 @@ import {style} from '@vanilla-extract/css'
 
 import {vars} from '~/styles/theme.css'
 
-export const recomendationsItemImageStyle = style({
+export const recommendationsItemImageStyle = style({
   backgroundPosition: 'center',
   backgroundSize: 'cover',
   height: 256
 })
 
-export const recomendationsItemTitleStyle = style({
+export const recommendationsItemTitleStyle = style({
   color: vars.colors.black,
   display: 'block',
   fontSize: 16,
@@ -19,7 +19,7 @@ export const recomendationsItemTitleStyle = style({
   whiteSpace: 'nowrap'
 })
 
-export const recomendationsItemPricetyles = style({
+export const recommendationsItemPricetyles = style({
   color: vars.colors.black,
   display: 'block',
   fontSize: 16,
@@ -31,6 +31,6 @@ export const recomendationsItemPricetyles = style({
   whiteSpace: 'nowrap'
 })
 
-export const recomendationsItemAddToCartButtonStyles = style({
+export const recommendationsItemAddToCartButtonStyles = style({
   minWidth: 120
 })

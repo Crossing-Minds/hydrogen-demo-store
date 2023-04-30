@@ -1,34 +1,35 @@
 import type {
   CartLineEdge,
-  Product
+  ProductVariant
 } from '@shopify/hydrogen/storefront-api-types'
 import classnames from 'classnames'
 import type {FunctionComponent} from 'react'
 import {useMemo} from 'react'
 
-import type {ProductType} from '~/types/product'
-import {ProductSchema} from '~/types/product'
+import type {ProductVariantType} from '~/types/product'
+import {ProductVariantSchema} from '~/types/product'
 
 import {ProductImageStyle} from './ProductImage.css'
 
 interface ProductImageProps {
   cartLineEdge?: CartLineEdge
   className?: string
-  product?: Product
+  productVariant?: ProductVariant
 }
 
 export const ProductImage: FunctionComponent<ProductImageProps> = ({
   cartLineEdge,
   className,
-  product
+  productVariant
 }) => {
-  const stronglyTypedProduct: ProductType | undefined = useMemo(() => {
-    try {
-      return ProductSchema.parse(product)
-    } catch {
-      return undefined
-    }
-  }, [product])
+  const stronglyTypedProductVariant: ProductVariantType | undefined =
+    useMemo(() => {
+      try {
+        return ProductVariantSchema.parse(productVariant)
+      } catch {
+        return undefined
+      }
+    }, [productVariant])
 
   const productImageStyles = useMemo(() => {
     if (cartLineEdge) {
@@ -37,14 +38,14 @@ export const ProductImage: FunctionComponent<ProductImageProps> = ({
       }
     }
 
-    if (stronglyTypedProduct) {
+    if (stronglyTypedProductVariant) {
       return {
-        backgroundImage: `url(${stronglyTypedProduct.media.nodes[0]?.image.url})`
+        backgroundImage: `url(${stronglyTypedProductVariant.image.url})`
       }
     }
 
     return undefined
-  }, [cartLineEdge, stronglyTypedProduct])
+  }, [cartLineEdge, stronglyTypedProductVariant])
 
   return (
     <div

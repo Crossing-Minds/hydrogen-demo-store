@@ -1,5 +1,11 @@
-import type {Product} from '@shopify/hydrogen/storefront-api-types'
+import {useRecordItemInteractions} from '@crossingminds/beam-react'
+import type {ProductVariant} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
+import {useMemo} from 'react'
+
+import {BEAM_REACT_OPTIONS} from '~/beam/config'
+import {sessionId} from '~/utils/sessionId.client'
+import {getIdFromShopifyEntityId} from '~/utils/shopify'
 
 import {
   ourFavoritesItemImageStyle,
@@ -9,20 +15,37 @@ import {
 import {ProductImage} from './ProductImage'
 
 interface OurFavoritesItemProps {
-  product: Product
+  productVariant: ProductVariant
 }
 
 export const OurFavoritesItem: FunctionComponent<OurFavoritesItemProps> = ({
-  product
+  productVariant
 }) => {
+  const {recordItemClickInteraction} = useRecordItemInteractions({
+    ...BEAM_REACT_OPTIONS,
+    sessionId
+  })
+
+  const productVariantId = useMemo(
+    () => getIdFromShopifyEntityId('ProductVariant', productVariant.id),
+    [productVariant]
+  )
+
   return (
     <div className={ourFavoritesItemStyle}>
-      <a href={`/products/${product.handle}`}>
+      <a
+        href={`/products/${productVariant.product.handle}?variant=${productVariantId}`}
+        onClick={() =>
+          productVariantId && recordItemClickInteraction(productVariantId)
+        }
+      >
         <ProductImage
           className={ourFavoritesItemImageStyle}
-          product={product}
+          productVariant={productVariant}
         />
-        <p className={ourFavoritesItemTitleStyle}>{product.title}</p>
+        <p className={ourFavoritesItemTitleStyle}>
+          {productVariant.product.title}
+        </p>
       </a>
     </div>
   )

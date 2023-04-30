@@ -7,22 +7,21 @@ import cartRecommendationsLoadingImage from '~/assets/cart-recommendations-loadi
 import {useCartRecommendations} from '~/hooks/useCartRecommendations'
 
 import {
-  cartRecomendationsLoadingStyle,
-  cartRecomendationsStyle,
-  cartRecomendationsSwiperWrapperStyle,
-  cartRecomendationsTitleStyle
-} from './CartRecomendations.css'
-import {CartRecomendationsItem} from './CartRecomendationsItem'
+  cartRecommendationsLoadingStyle,
+  cartRecommendationsStyle,
+  cartRecommendationsSwiperWrapperStyle,
+  cartRecommendationsTitleStyle
+} from './CartRecommendations.css'
+import {CartRecommendationsItem} from './CartRecommendationsItem'
 
-interface CartRecomendationsProps {
+interface CartRecommendationsProps {
   cart: Cart
   title: string
 }
 
-export const CartRecomendations: FunctionComponent<CartRecomendationsProps> = ({
-  cart,
-  title
-}) => {
+export const CartRecommendations: FunctionComponent<
+  CartRecommendationsProps
+> = ({cart, title}) => {
   const {
     cartRecommendations,
     cartRecommendationsLoading,
@@ -36,25 +35,25 @@ export const CartRecomendations: FunctionComponent<CartRecomendationsProps> = ({
   }, [cart])
 
   return (
-    <div className={cartRecomendationsStyle}>
-      <h2 className={cartRecomendationsTitleStyle}>{title}</h2>
+    <div className={cartRecommendationsStyle}>
+      <h2 className={cartRecommendationsTitleStyle}>{title}</h2>
       {cartRecommendationsLoading ? (
         <img
           alt="Cart Recommendations Loading Animation"
-          className={cartRecomendationsLoadingStyle}
+          className={cartRecommendationsLoadingStyle}
           src={cartRecommendationsLoadingImage}
         />
       ) : (
         <>
-          <div className={cartRecomendationsSwiperWrapperStyle}>
+          <div className={cartRecommendationsSwiperWrapperStyle}>
             <Swiper
               slidesPerView={'auto'}
               spaceBetween={8}
               centeredSlides={false}
             >
-              {cartRecommendations.map(product => (
-                <SwiperSlide key={product.id}>
-                  <CartRecomendationsItem product={product.product} />
+              {cartRecommendations.map(productVariant => (
+                <SwiperSlide key={productVariant.id}>
+                  <CartRecommendationsItem productVariant={productVariant} />
                 </SwiperSlide>
               ))}
             </Swiper>

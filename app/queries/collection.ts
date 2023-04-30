@@ -24,23 +24,24 @@ query collection($handle: String!, $first: Int, $last: Int, $endCursor: String, 
         id
         descriptionHtml
         handle
-        media(first: 1) {
-          nodes {
-            ... on MediaImage {
-              image {
-                height
-                url
-                width
-              }
-            }
-          }
-        }
         variants(first: 1) {
           nodes {
             id
+            image {
+              height
+              url
+              width
+            }
             price {
               amount
             }
+            product {
+              id
+              descriptionHtml
+              handle
+              title
+            }
+            title
           }
         }
         title

@@ -1,6 +1,7 @@
 import {type LoaderArgs, json, redirect} from '@shopify/remix-oxygen'
 
 import {PRODUCTS_BY_VARIANT_QUERY} from '~/queries/product'
+import {getShopifyEntityIdFromId} from '~/utils/shopify'
 
 export async function action({request, context}: LoaderArgs) {
   const [formData] = await Promise.all([request.formData()])
@@ -16,8 +17,8 @@ export async function action({request, context}: LoaderArgs) {
     PRODUCTS_BY_VARIANT_QUERY,
     {
       variables: {
-        ids: (itemIds as string[]).map(
-          itemId => `gid://shopify/ProductVariant/${itemId}`
+        ids: (itemIds as string[]).map(itemId =>
+          getShopifyEntityIdFromId('ProductVariant', itemId)
         )
       }
     }

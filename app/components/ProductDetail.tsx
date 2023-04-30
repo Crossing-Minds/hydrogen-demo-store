@@ -1,11 +1,12 @@
 import {useRecordItemInteractions} from '@crossingminds/beam-react'
 import {useFetcher, useMatches} from '@remix-run/react'
-import type {Product} from '@shopify/hydrogen/storefront-api-types'
+import type {ProductVariant} from '@shopify/hydrogen/storefront-api-types'
 import type {FunctionComponent} from 'react'
 import {useEffect, useMemo} from 'react'
 
 import {BEAM_REACT_OPTIONS} from '~/beam/config'
 import {sessionId} from '~/utils/sessionId.client'
+import {getIdFromShopifyEntityId} from '~/utils/shopify'
 
 import {Button} from './Button'
 import {
@@ -21,14 +22,16 @@ import {
 import {ProductImage} from './ProductImage'
 
 interface ButtonProps {
-  product: Product
+  productVariant: ProductVariant
 }
 
-export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
+export const ProductDetail: FunctionComponent<ButtonProps> = ({
+  productVariant
+}) => {
   const [root] = useMatches()
   const selectedLocale = root?.data?.selectedLocale
   const fetcher = useFetcher()
-  const lines = [{merchandiseId: product.variants.nodes[0]?.id, quantity: 1}]
+  const lines = [{merchandiseId: productVariant.id, quantity: 1}]
 
   const {recordItemPageViewInteraction, recordAddItemToCartInteraction} =
     useRecordItemInteractions({
@@ -36,24 +39,29 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
       sessionId
     })
 
-  const itemId = useMemo(
-    () => product?.variants?.nodes?.[0]?.id?.split('/').at(-1),
-    [product?.variants?.nodes]
+  const productVariantId = useMemo(
+    () => getIdFromShopifyEntityId('ProductVariant', productVariant.id),
+    [productVariant]
   )
 
   useEffect(() => {
-    if (itemId) {
-      recordItemPageViewInteraction(itemId)
+    if (productVariantId) {
+      recordItemPageViewInteraction(productVariantId)
     }
-  }, [itemId, product.variants.nodes, recordItemPageViewInteraction])
+  }, [productVariantId, productVariant, recordItemPageViewInteraction])
 
   return (
     <div className={productDetailStyle}>
-      <ProductImage className={productDetailImageStyle} product={product} />
+      <ProductImage
+        className={productDetailImageStyle}
+        productVariant={productVariant}
+      />
       <div className={productDetailWrapperStyle}>
-        <h1 className={productDetailTitleStyle}>{product.title}</h1>
+        <h1 className={productDetailTitleStyle}>
+          {productVariant.product.title}
+        </h1>
         <p className={productDetailPriceStyle}>
-          ${product.variants.nodes[0]?.price.amount}
+          ${productVariant.price.amount}
         </p>
         <p className={productDetailAttributeStyle}>Color: White</p>
         <p className={productDetailAttributeStyle}>Size: M</p>
@@ -64,7 +72,10 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
           <fetcher.Form
             action="/"
             method="post"
-            onSubmit={() => itemId && recordAddItemToCartInteraction(itemId)}
+            onSubmit={() =>
+              productVariantId &&
+              recordAddItemToCartInteraction(productVariantId)
+            }
           >
             <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
             <input
@@ -78,7 +89,10 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
           <fetcher.Form
             action="/"
             method="post"
-            onSubmit={() => itemId && recordAddItemToCartInteraction(itemId)}
+            onSubmit={() =>
+              productVariantId &&
+              recordAddItemToCartInteraction(productVariantId)
+            }
           >
             <input type="hidden" name="cartAction" value={'ADD_TO_CART'} />
             <input
@@ -92,7 +106,9 @@ export const ProductDetail: FunctionComponent<ButtonProps> = ({product}) => {
         </div>
         <div
           className={productDetailDescriptionStyle}
-          dangerouslySetInnerHTML={{__html: product.descriptionHtml}}
+          dangerouslySetInnerHTML={{
+            __html: productVariant.product.descriptionHtml
+          }}
         />
       </div>
     </div>

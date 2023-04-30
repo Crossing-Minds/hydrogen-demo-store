@@ -12,7 +12,7 @@ import {
   CartDrawerSubtotalStyle
 } from './CartDrawer.css'
 import {CartDrawerLine} from './CartDrawerLine'
-import {CartRecomendations} from './CartRecommendations'
+import {CartRecommendations} from './CartRecommendations'
 
 interface HeaderProps {
   cart: Cart
@@ -46,7 +46,7 @@ export const CartDrawer: FunctionComponent<HeaderProps> = ({cart, close}) => {
               ))}
             </div>
             <div className={CartDrawerRecommendationsStyle}>
-              <CartRecomendations
+              <CartRecommendations
                 cart={data}
                 title="Frequently purchased together"
               />

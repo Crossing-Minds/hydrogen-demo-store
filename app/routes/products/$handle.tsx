@@ -4,30 +4,42 @@ import {
   getPersonalizedRecommendations
 } from '@crossingminds/beam-react'
 import {useLoaderData} from '@remix-run/react'
-import type {Product} from '@shopify/hydrogen/storefront-api-types'
 import type {LoaderArgs} from '@shopify/remix-oxygen'
 import {json} from '@shopify/remix-oxygen'
 
-import {BEAM_REACT_OPTIONS, getRandomProductVariantIds} from '~/beam/config'
+import {BEAM_REACT_OPTIONS} from '~/beam/config'
 import {ProductDetail} from '~/components/ProductDetail'
-import {Recomendations} from '~/components/Recomendations'
-import {PRODUCTS_BY_VARIANT_QUERY, PRODUCT_QUERY} from '~/queries/product'
+import {Recommendations} from '~/components/Recommendations'
+import {
+  PRODUCTS_BY_VARIANT_QUERY,
+  PRODUCT_BY_VARIANT_QUERY
+} from '~/queries/product'
 import {commitSession, getSessionAndSessionId} from '~/sessions'
-import {getIdFromShopifyEntityId} from '~/utils/shopify'
+import {
+  getIdFromShopifyEntityId,
+  getShopifyEntityIdFromId
+} from '~/utils/shopify'
 
 export const loader = async ({context, params, request}: LoaderArgs) => {
   const {session, sessionId} = await getSessionAndSessionId(request)
   const {handle} = params
-  const {product} = await context.storefront.query<Promise<any>>(
-    PRODUCT_QUERY,
+  const url = new URL(request.url)
+  const variant = url.searchParams.get('variant')
+
+  if (!variant) {
+    throw new Response(undefined, {status: 404})
+  }
+
+  const {node: productVariant} = await context.storefront.query<Promise<any>>(
+    PRODUCT_BY_VARIANT_QUERY,
     {
       variables: {
-        handle
+        id: getShopifyEntityIdFromId('ProductVariant', variant)
       }
     }
   )
 
-  if (!product?.id) {
+  if (!productVariant?.id) {
     throw new Response(undefined, {status: 404})
   }
 
@@ -35,51 +47,44 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
     await getItemBasedRecommendations({
       ...BEAM_REACT_OPTIONS,
       sessionId,
-      itemId: getIdFromShopifyEntityId(
-        'ProductVariant',
-        (product as Product).variants.nodes[0]?.id
-      ),
+      itemId: getIdFromShopifyEntityId('ProductVariant', productVariant.id),
       options: {
         maxResults: 8
       }
     })
 
-  const {nodes: productForPurchasedOrViewed} = await context.storefront.query<
-    Promise<any>
-  >(PRODUCTS_BY_VARIANT_QUERY, {
-    variables: {
-      ids: variantIdsForPurchasedOrViewed.map(
-        variantId => `gid://shopify/ProductVariant/${variantId}`
-      )
-    }
-  })
+  const {nodes: productVariantsForPurchasedOrViewed} =
+    await context.storefront.query<Promise<any>>(PRODUCTS_BY_VARIANT_QUERY, {
+      variables: {
+        ids: variantIdsForPurchasedOrViewed.map(
+          variantId => `gid://shopify/ProductVariant/${variantId}`
+        )
+      }
+    })
 
-  // TODO: when personalized recommendations are working, use the following code
-  // const {itemIds: variantIdsForRecommendations} =
-  //   await getPersonalizedRecommendations({
-  //     ...BEAM_REACT_OPTIONS,
-  //     sessionId,
-  //     maxResults: 8,
-  //     sessionScenario: SCENARIO_OMITTED // TODO: add scenario
-  //   })
-  const variantIdsForRecommendations = getRandomProductVariantIds(8)
+  const {itemIds: variantIdsForRecommendations} =
+    await getPersonalizedRecommendations({
+      ...BEAM_REACT_OPTIONS,
+      sessionId,
+      maxResults: 8,
+      sessionScenario: SCENARIO_OMITTED // TODO: add scenario
+    })
 
-  const {nodes: productForRecommendations} = await context.storefront.query<
-    Promise<any>
-  >(PRODUCTS_BY_VARIANT_QUERY, {
-    variables: {
-      ids: variantIdsForRecommendations.map(
-        variantId => `gid://shopify/ProductVariant/${variantId}`
-      )
-    }
-  })
+  const {nodes: productVariantsForRecommendations} =
+    await context.storefront.query<Promise<any>>(PRODUCTS_BY_VARIANT_QUERY, {
+      variables: {
+        ids: variantIdsForRecommendations.map(
+          variantId => `gid://shopify/ProductVariant/${variantId}`
+        )
+      }
+    })
 
   return json(
     {
       handle,
-      product,
-      productForPurchasedOrViewed,
-      productForRecommendations
+      productVariant,
+      productVariantsForPurchasedOrViewed,
+      productVariantsForRecommendations
     },
     {
       headers: {
@@ -90,19 +95,22 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
 }
 
 export default function ProductHandle() {
-  const {product, productForPurchasedOrViewed, productForRecommendations} =
-    useLoaderData<typeof loader>()
+  const {
+    productVariant,
+    productVariantsForPurchasedOrViewed,
+    productVariantsForRecommendations
+  } = useLoaderData<typeof loader>()
 
   return (
     <>
-      <ProductDetail product={product} />
-      <Recomendations
-        products={productForPurchasedOrViewed}
+      <ProductDetail productVariant={productVariant} />
+      <Recommendations
+        productVariants={productVariantsForPurchasedOrViewed}
         title="Customers also purchased or viewed"
       />
-      {productForRecommendations?.length ? (
-        <Recomendations
-          products={productForRecommendations}
+      {productVariantsForRecommendations?.length ? (
+        <Recommendations
+          productVariants={productVariantsForRecommendations}
           title="Recommendations for you"
         />
       ) : undefined}
