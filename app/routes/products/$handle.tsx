@@ -15,6 +15,7 @@ import {
   PRODUCT_BY_VARIANT_QUERY
 } from '~/queries/product'
 import {commitSession, getSessionAndSessionId} from '~/sessions'
+import {removeDuplicatedIds} from '~/utils/recommendations'
 import {
   getIdFromShopifyEntityId,
   getShopifyEntityIdFromId
@@ -66,16 +67,19 @@ export const loader = async ({context, params, request}: LoaderArgs) => {
     await getPersonalizedRecommendations({
       ...BEAM_REACT_OPTIONS,
       sessionId,
-      maxResults: 8,
+      maxResults: 16,
       sessionScenario: SCENARIO_OMITTED // TODO: add scenario
     })
 
   const {nodes: productVariantsForRecommendations} =
     await context.storefront.query<Promise<any>>(PRODUCTS_BY_VARIANT_QUERY, {
       variables: {
-        ids: variantIdsForRecommendations.map(
-          variantId => `gid://shopify/ProductVariant/${variantId}`
+        ids: removeDuplicatedIds(
+          variantIdsForRecommendations,
+          variantIdsForPurchasedOrViewed
         )
+          .slice(0, 8)
+          .map(variantId => `gid://shopify/ProductVariant/${variantId}`)
       }
     })
 
