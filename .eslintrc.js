@@ -13,6 +13,8 @@ module.exports = {
   rules: {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    'hydrogen/prefer-image-component': 'off',
+    '@typescript-eslint/naming-convention': 'off',
     'sort-imports': [
       'error',
       {

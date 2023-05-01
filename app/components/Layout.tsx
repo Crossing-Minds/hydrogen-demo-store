@@ -1,24 +1,63 @@
+import {useMatches} from '@remix-run/react'
 import type {FunctionComponent, PropsWithChildren} from 'react'
+import {useEffect, useState} from 'react'
 
-interface LayoutProps {
-  title: string
-}
+import {useCartFetchers} from '~/hooks/useCartFetchers'
 
-export const Layout: FunctionComponent<PropsWithChildren<LayoutProps>> = ({
-  children,
-  title
+import {CartDrawer} from './CartDrawer'
+import {Drawer, useDrawer} from './Drawer'
+import {Footer} from './Footer'
+import {Header} from './Header'
+import {
+  layoutContentWrapperStyle,
+  layoutFooterWrapperStyle,
+  layoutMainStyle,
+  layoutStyle
+} from './Layout.css'
+
+export const Layout: FunctionComponent<PropsWithChildren<object>> = ({
+  children
 }) => {
-  return (
-    <div>
-      <header role="banner">
-        <div>
-          <a href="/">{title}</a>
-        </div>
-      </header>
+  const {closeDrawer, isOpen, openDrawer} = useDrawer()
+  const [root] = useMatches()
+  const cart = root?.data?.cart
 
-      <main role="main" id="mainContent">
-        {children}
-      </main>
+  const addToCartFetchers = useCartFetchers('ADD_TO_CART')
+  const [activeAddToCartFetchersCount, setActiveAddToCartFetchersCount] =
+    useState(0)
+
+  useEffect(() => {
+    if (
+      !isOpen &&
+      !addToCartFetchers.length &&
+      activeAddToCartFetchersCount === 1
+    ) {
+      openDrawer()
+      setActiveAddToCartFetchersCount(0)
+    } else {
+      setActiveAddToCartFetchersCount(addToCartFetchers.length)
+    }
+  }, [addToCartFetchers, activeAddToCartFetchersCount, isOpen, openDrawer])
+
+  return (
+    <div className={layoutStyle}>
+      <div className={layoutContentWrapperStyle}>
+        <Header openDrawer={openDrawer} />
+        <main className={layoutMainStyle} id="mainContent" role="main">
+          {children}
+        </main>
+        <Drawer
+          close={closeDrawer}
+          open={isOpen}
+          onClose={closeDrawer}
+          title="Your cart"
+        >
+          <CartDrawer cart={cart} close={closeDrawer} />
+        </Drawer>
+      </div>
+      <div className={layoutFooterWrapperStyle}>
+        <Footer />
+      </div>
     </div>
   )
 }
