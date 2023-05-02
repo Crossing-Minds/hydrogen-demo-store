@@ -132,7 +132,7 @@ export default function ProductHandle() {
       <ProductDetail productVariant={productVariant} />
       <Recommendations
         productVariants={productVariantsForPurchasedOrViewed}
-        title="Picked just for you"
+        title="More of this style"
       />
       {productVariantsForRecommendations?.length ? (
         <Recommendations
