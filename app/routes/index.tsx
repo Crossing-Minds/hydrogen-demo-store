@@ -29,81 +29,116 @@ const HERO_IMAGES = [HeroImage1, HeroImage2, HeroImage3]
 export const loader = async ({context, request}: LoaderArgs) => {
   const {session, sessionId} = await getSessionAndSessionId(request)
 
-  const {itemProperties: collectionIdsForCollections} =
-    await getPropertyRecommendations({
-      ...BEAM_REACT_OPTIONS,
-      sessionId,
-      sessionPropertiesScenario:
-        RECOMMENDATION_SCENARIOS.HOME_COLLECTIONS_FOR_YOU,
-      propertyName: 'collections',
-      maxResults: 6
-    })
-
-  const {nodes: collectionsForCollections} = await context.storefront.query<
-    Promise<any>
-  >(COLLECTIONS_QUERY, {
-    variables: {
-      ids: collectionIdsForCollections.map(
-        collectionId => `gid://shopify/Collection/${collectionId}`
-      )
-    }
+  const collectionRecommendationsPromise = getPropertyRecommendations({
+    ...BEAM_REACT_OPTIONS,
+    sessionId,
+    sessionPropertiesScenario:
+      RECOMMENDATION_SCENARIOS.HOME_COLLECTIONS_FOR_YOU,
+    propertyName: 'collections',
+    maxResults: 6
   })
 
-  const {itemIds: variantIdsForRecommendations} =
-    await getPersonalizedRecommendations({
-      ...BEAM_REACT_OPTIONS,
-      sessionId,
-      sessionScenario: RECOMMENDATION_SCENARIOS.HOME_RECOMMENDATIONS_FOR_YOU,
-      maxResults: 8
-    })
+  const productRecommendationsPromise = getPersonalizedRecommendations({
+    ...BEAM_REACT_OPTIONS,
+    sessionId,
+    sessionScenario: RECOMMENDATION_SCENARIOS.HOME_RECOMMENDATIONS_FOR_YOU,
+    maxResults: 8
+  })
 
-  const {nodes: productVariantsForRecommendations} =
-    await context.storefront.query<Promise<any>>(PRODUCTS_BY_VARIANT_QUERY, {
+  const newReleasesRecommendations = getPersonalizedRecommendations({
+    ...BEAM_REACT_OPTIONS,
+    sessionId,
+    sessionScenario: RECOMMENDATION_SCENARIOS.HOME_NEW_RELEASES_FOR_YOU,
+    maxResults: 11
+  })
+
+  const ourFavoritesRecommendationsPromise = getPersonalizedRecommendations({
+    ...BEAM_REACT_OPTIONS,
+    sessionId,
+    sessionScenario: RECOMMENDATION_SCENARIOS.HOME_OUR_FAVORITES,
+    maxResults: 17
+  })
+
+  const getCollectionItemRecommendations = async () => {
+    const {itemProperties: collectionIdsForCollections} =
+      await collectionRecommendationsPromise
+
+    return await context.storefront.query<Promise<any>>(COLLECTIONS_QUERY, {
       variables: {
-        ids: variantIdsForRecommendations.map(
-          variantId => `gid://shopify/ProductVariant/${variantId}`
+        ids: collectionIdsForCollections.map(
+          collectionId => `gid://shopify/Collection/${collectionId}`
         )
       }
     })
+  }
 
-  const {itemIds: variantIdsForNewReleases} =
-    await getPersonalizedRecommendations({
-      ...BEAM_REACT_OPTIONS,
-      sessionId,
-      sessionScenario: RECOMMENDATION_SCENARIOS.HOME_NEW_RELEASES_FOR_YOU,
-      maxResults: 11
-    })
+  const getProductItemRecommendations = async () => {
+    const {itemIds: variantIdsForRecommendations} =
+      await productRecommendationsPromise
 
-  const {nodes: productVariantsForNewReleases} = await context.storefront.query<
-    Promise<any>
-  >(PRODUCTS_BY_VARIANT_QUERY, {
-    variables: {
-      ids: removeDuplicatedIdsAndGetFirstNth(
-        variantIdsForNewReleases,
-        variantIdsForRecommendations,
-        3
-      ).map(variantId => `gid://shopify/ProductVariant/${variantId}`)
-    }
-  })
-
-  const {itemIds: variantIdsForOurFavorites} =
-    await getPersonalizedRecommendations({
-      ...BEAM_REACT_OPTIONS,
-      sessionId,
-      sessionScenario: RECOMMENDATION_SCENARIOS.HOME_OUR_FAVORITES,
-      maxResults: 17
-    })
-
-  const {nodes: productVariantsForOurFavorites} =
-    await context.storefront.query<Promise<any>>(PRODUCTS_BY_VARIANT_QUERY, {
-      variables: {
-        ids: removeDuplicatedIdsAndGetFirstNth(
-          variantIdsForOurFavorites,
-          [...variantIdsForNewReleases, ...variantIdsForNewReleases],
-          6
-        ).map(variantId => `gid://shopify/ProductVariant/${variantId}`)
+    return await context.storefront.query<Promise<any>>(
+      PRODUCTS_BY_VARIANT_QUERY,
+      {
+        variables: {
+          ids: variantIdsForRecommendations.map(
+            variantId => `gid://shopify/ProductVariant/${variantId}`
+          )
+        }
       }
-    })
+    )
+  }
+
+  const getNewReleasesItemRecommendations = async () => {
+    const {itemIds: variantIdsForNewReleases} = await newReleasesRecommendations
+    const {itemIds: variantIdsForRecommendations} =
+      await productRecommendationsPromise
+
+    return await context.storefront.query<Promise<any>>(
+      PRODUCTS_BY_VARIANT_QUERY,
+      {
+        variables: {
+          ids: removeDuplicatedIdsAndGetFirstNth(
+            variantIdsForNewReleases,
+            variantIdsForRecommendations,
+            3
+          ).map(variantId => `gid://shopify/ProductVariant/${variantId}`)
+        }
+      }
+    )
+  }
+
+  const getOurFavoritesItemRecommendations = async () => {
+    const {itemIds: variantIdsForOurFavorites} =
+      await ourFavoritesRecommendationsPromise
+    const {itemIds: variantIdsForNewReleases} = await newReleasesRecommendations
+    const {itemIds: variantIdsForRecommendations} =
+      await productRecommendationsPromise
+
+    return await context.storefront.query<Promise<any>>(
+      PRODUCTS_BY_VARIANT_QUERY,
+      {
+        variables: {
+          ids: removeDuplicatedIdsAndGetFirstNth(
+            variantIdsForOurFavorites,
+            [...variantIdsForNewReleases, ...variantIdsForRecommendations],
+            6
+          ).map(variantId => `gid://shopify/ProductVariant/${variantId}`)
+        }
+      }
+    )
+  }
+
+  const [
+    {nodes: collectionsForCollections},
+    {nodes: productVariantsForRecommendations},
+    {nodes: productVariantsForNewReleases},
+    {nodes: productVariantsForOurFavorites}
+  ] = await Promise.all([
+    getCollectionItemRecommendations(),
+    getProductItemRecommendations(),
+    getNewReleasesItemRecommendations(),
+    getOurFavoritesItemRecommendations()
+  ])
 
   return json(
     {
