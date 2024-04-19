@@ -145,10 +145,13 @@ export const loader = async ({context, request}: LoaderArgs) => {
       backgroundImageUrl: HERO_IMAGES[
         Math.floor(Math.random() * HERO_IMAGES.length)
       ] as string,
-      collectionsForCollections,
-      productVariantsForNewReleases,
-      productVariantsForOurFavorites,
-      productVariantsForRecommendations
+      collectionsForCollections: collectionsForCollections.filter(Boolean),
+      productVariantsForNewReleases:
+        productVariantsForNewReleases.filter(Boolean),
+      productVariantsForOurFavorites:
+        productVariantsForOurFavorites.filter(Boolean),
+      productVariantsForRecommendations:
+        productVariantsForRecommendations.filter(Boolean)
     },
     {
       headers: {
